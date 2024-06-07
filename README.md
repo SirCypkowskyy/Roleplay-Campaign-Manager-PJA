@@ -6,14 +6,14 @@ Kolekcja instrukcji do projektu końcowego z MAS.
 
 Uruchamianie aplikacji bez całkowitej konteneryzacji:
 
-1. Zmień connection string w pliku `appsettings.json` na swój, lub utwórz kontener Docker z bazą danych, korzystając z pliku docker-compose.yml (użyj komendy `docker compose up -d db` w folderze, gdzie znajduje się docker-compose).
-2. Uruchom migracje, wpisując w konsoli `dotnet ef database update -p ../MasFinalProj.Persistence -c DatabaseContext -s .`.
+1. Zmień connection string w pliku `appsettings.json` (w folderze MasFinalProj.Api) na swój, lub utwórz kontener Docker z bazą danych, korzystając z pliku docker-compose.yml (użyj komendy `docker compose up -d db` w folderze, gdzie znajduje się docker-compose).
+2. Uruchom migracje, wpisując w konsoli (w folderze MasFinalProj.Api) `dotnet ef database update -p ../MasFinalProj.Persistence -c DatabaseContext -s .`.
 3. Uruchom aplikację.
 
 Uruchamianie aplikacji z konteneryzacją:
 
 1. Uruchom kontenery, wpisując w konsoli `docker compose up -d`.
-2. Uruchom migracje, wpisując w konsoli `dotnet ef database update -p ../MasFinalProj.Persistence -c DatabaseContext -s .`.
+2. Uruchom migracje, wpisując w konsoli (w folderze MasFinalProj.Api) `dotnet ef database update -p ../MasFinalProj.Persistence -c DatabaseContext -s .`.
 
 
 ## Źródła
