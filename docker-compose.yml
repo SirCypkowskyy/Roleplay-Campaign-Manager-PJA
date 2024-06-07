@@ -1,0 +1,13 @@
+﻿services:
+  api:
+    image: masfinalproj.api
+    build:
+      context: .
+      dockerfile: src/MasFinalProj.API/Dockerfile
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - SA_PASSWORD=Test123$
+      - ACCEPT_EULA=Y
+    ports:
+        - "5434:1433"
