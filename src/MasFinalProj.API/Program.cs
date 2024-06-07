@@ -87,6 +87,9 @@ public class Program
             var webApiXmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var persistenceXmlFile = $"{typeof(User).Assembly.GetName().Name}.xml";
 
+            var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            opts.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+            
             // opts.IncludeXmlComments(webApiXmlFile);
             // opts.IncludeXmlComments(sharedXmlFile);
             // opts.IncludeXmlComments(persistenceXmlFile);
