@@ -1,12 +1,12 @@
 namespace MasFinalProj.Domain.Models.Users;
 
 /// <summary>
-///     Encja moderatora aplikacji
+/// Encja moderatora aplikacji
 /// </summary>
 public class Moderator : User
 {
     /// <summary>
-    ///     Data, od której pełni obowiązki.
+    /// Data, od której pełni obowiązki.
     /// </summary>
-    public DateTime StaffSince { get; set; }
+    public DateTime StaffSinceUtc { get; set; }
 }

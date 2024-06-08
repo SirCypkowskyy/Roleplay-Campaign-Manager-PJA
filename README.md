@@ -15,6 +15,8 @@ Uruchamianie aplikacji z konteneryzacją:
 1. Uruchom kontenery, wpisując w konsoli `docker compose up -d`.
 2. Uruchom migracje, wpisując w konsoli (w folderze MasFinalProj.Api) `dotnet ef database update -p ../MasFinalProj.Persistence -c DatabaseContext -s .`.
 
+Dodawanie nowej migracji:
+`dotnet ef migrations add <MigrationName> -p ../MasFinalProj.Persistence -c DatabaseContext -s .`
 
 ## Źródła
 

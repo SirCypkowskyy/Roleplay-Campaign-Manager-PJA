@@ -15,12 +15,18 @@ public class User : BaseEntity<Guid>
     /// <summary>
     /// Nazwa użytkownika
     /// </summary>
+    /// <remarks>
+    /// Atrybut unikalny
+    /// </remarks>
     [MaxLength(32)]
     public string Username { get; set; }
 
     /// <summary>
     /// Email użytkownika
     /// </summary>
+    /// <remarks>
+    /// Atrybut unikalny
+    /// </remarks>
     [MaxLength(52)]
     [EmailAddress]
     public string Email { get; set; }
@@ -44,12 +50,18 @@ public class User : BaseEntity<Guid>
     /// <summary>
     /// Hasło użytkownika
     /// </summary>
+    /// <remarks>
+    /// Przechowywane w formacie base64
+    /// </remarks>
     [MaxLength(64)]
     public string PasswordHash { get; set; }
 
     /// <summary>
     /// Sól hasła
     /// </summary>
+    /// <remarks>
+    /// Przechowywana w formacie base64
+    /// </remarks>
     [MaxLength(64)]
     public string PasswordSalt { get; set; }
 

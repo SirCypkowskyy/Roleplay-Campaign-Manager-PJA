@@ -1,3 +1,4 @@
+using MasFinalProj.Domain.Helpers;
 using MasFinalProj.Domain.Models.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -23,6 +24,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired()
             .HasMaxLength(52);
         
+        builder.HasIndex(u => u.Username)
+            .IsUnique();
+        
         builder.Property(u => u.Username)
             .IsRequired()
             .HasMaxLength(32);
@@ -45,12 +49,26 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired(false)
             .HasMaxLength(2500);
         
-        
         builder.Property(u => u.ProfileImageId)
             .IsRequired(false);
 
         builder.HasOne(u => u.ProfileImage)
-            .WithMany()
+            .WithMany(i => i.UsersWithImage)
             .HasForeignKey(u => u.ProfileImageId);
+
+        var authData = AuthHelper.GeneratePasswordHash("Test123$");
+        
+        // Seedowany użytkownik
+        builder.HasData(new User
+        {
+            Id = Guid.NewGuid(),
+            Username = "BaseUser",
+            Email = "user@s24759masfinal.com",
+            PasswordHash = authData.hashPasswrdBase64,
+            PasswordSalt = authData.saltBase64,
+            Description = "Testowy użytkownik",
+            CreatedBy = "Seed",
+            CreatedAtUtc = DateTime.UtcNow
+        });
     }
 }

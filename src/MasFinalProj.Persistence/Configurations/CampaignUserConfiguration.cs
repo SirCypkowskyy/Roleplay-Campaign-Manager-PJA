@@ -17,13 +17,5 @@ public class CampaignUserConfiguration : IEntityTypeConfiguration<CampaignUser>
         builder.HasKey(cu => cu.Id);
         builder.Property(cu => cu.Id)
             .ValueGeneratedOnAdd();
-
-        // builder.HasOne(cu => cu.User)
-        //     .WithMany(u => u.CampaignUsers)
-        //     .HasForeignKey(cu => cu.UserId);
-        //
-        // builder.HasOne(cu => cu.Campaign)
-        //     .WithMany(c => c.CampaignUsers)
-        //     .HasForeignKey(cu => cu.CampaignId);
     }
 }

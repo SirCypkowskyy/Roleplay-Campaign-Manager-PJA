@@ -13,6 +13,7 @@ public class Note : BaseEntity<long>
     /// <summary>
     /// Nazwa notatki
     /// </summary>
+    [MaxLength(100)]
     public string Name { get; set; }
 
     /// <summary>
@@ -56,23 +57,23 @@ public class Note : BaseEntity<long>
         set
         {
             if (value.HasValue)
-                _itemId = null;
+                _characterAttributeId = null;
             _characterId = value;
         }
     }
     
     /// <summary>
-    /// Przedmiot, który jest powiązany z notatką
+    /// Attrybut postaci, który jest powiązany z notatką
     /// </summary>
     /// <remarks>
-    /// Notatka może nie być powiązana z przedmiotem (jeśli dotyczy postaci, XOR z <see cref="CharacterId"/>)
+    /// Notatka może nie być powiązana z atrybutem postaci (jeśli dotyczy postaci, XOR z <see cref="CharacterId"/>)
     /// </remarks>
-    public Item? Item { get; set; }
+    public CharacterAttribute? CharacterAttribute { get; set; }
 
     /// <summary>
     /// Id przedmiotu, który jest powiązany z notatką
     /// </summary>
-    private long? _itemId;
+    private long? _characterAttributeId;
     
     /// <summary>
     /// Id przedmiotu, który jest powiązany z notatką
@@ -80,14 +81,14 @@ public class Note : BaseEntity<long>
     /// <remarks>
     /// Notatka może nie być powiązana z przedmiotem (jeśli dotyczy postaci, XOR z <see cref="CharacterId"/>)
     /// </remarks>
-    public long? ItemId
+    public long? CharacterAttributeId
     {
-        get => _itemId;
+        get => _characterAttributeId;
         set
         {
             if (value.HasValue)
                 _characterId = null;
-            _itemId = value;
+            _characterAttributeId = value;
         }
     }
 }

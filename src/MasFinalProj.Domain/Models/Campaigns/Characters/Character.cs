@@ -31,12 +31,17 @@ public class Character : BaseEntity<long>
     /// <summary>
     /// Zdjęcie postaci
     /// </summary>
-    public Image CharacterImage { get; set; }
+    public Image? CharacterImage { get; set; }
 
     /// <summary>
     /// Id zdjęcia postaci
     /// </summary>
-    public long CharacterImageId { get; set; }
+    public long? CharacterImageId { get; set; }
+
+    /// <summary>
+    /// Pieniądze postaci
+    /// </summary>
+    public decimal Money { get; set; } = 0;
 
     /// <summary>
     /// Gracz, który jest właścicielem postaci
@@ -53,31 +58,48 @@ public class Character : BaseEntity<long>
     /// Postać może nie mieć właściciela, jeśli jest to postać NPC
     /// </remarks>
     public long? PlayerOwnerId { get; set; }
-
+    
+    /// <summary>
+    /// Wiadomości, które postać wysłała
+    /// </summary>
+    public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
+    
     /// <summary>
     /// Relacje tej postaci z innymi postaciami
     /// </summary>
-    public ICollection<CharacterRelationWith> RelationsFromCharacterToOthers { get; set; } =
+    public virtual ICollection<CharacterRelationWith> RelationsFromCharacterToOthers { get; set; } =
         new List<CharacterRelationWith>();
 
     /// <summary>
     /// Relacje innych postaci z tą postacią
     /// </summary>
-    public ICollection<CharacterRelationWith> RelationsFromOthersToCharacter { get; set; } =
+    public virtual ICollection<CharacterRelationWith> RelationsFromOthersToCharacter { get; set; } =
         new List<CharacterRelationWith>();
 
     /// <summary>
-    /// Statystyki postaci
+    /// Atrybuty postaci
     /// </summary>
-    public ICollection<Stat> Stats { get; set; } = new List<Stat>();
-
-    /// <summary>
-    /// Przedmioty, które posiada postać
-    /// </summary>
-    public ICollection<Item> Items { get; set; } = new List<Item>();
+    public virtual ICollection<CharacterAttribute> CharacterAttributes { get; set; } = new List<CharacterAttribute>();
 
     /// <summary>
     /// Notatki dotyczące postaci
     /// </summary>
-    public ICollection<Note> Notes { get; set; } = new List<Note>();
+    public virtual ICollection<Note> Notes { get; set; } = new List<Note>();
+
+    /// <summary>
+    /// Zwraca sumę pieniędzy postaci oraz wartości jej ekwipunku
+    /// </summary>
+    /// <returns></returns>
+    public decimal GetTotalMoney()
+    {
+        var characterItemAttributes = CharacterAttributes
+            .OfType<Item>()
+            .Select(i => i.MoneyValue).Sum();
+        
+        var characterStatItemAttributes = CharacterAttributes
+            .OfType<StatItem>()
+            .Select(i => i.MoneyValue).Sum();
+        
+        return Money + characterItemAttributes + characterStatItemAttributes;
+    }
 }

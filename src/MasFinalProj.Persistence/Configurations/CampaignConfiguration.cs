@@ -30,9 +30,12 @@ public class CampaignConfiguration : IEntityTypeConfiguration<Campaign>
         builder.Property(c => c.IsPublic)
             .HasDefaultValue(false);
         
+        builder.Property(c => c.GameCurrency)
+            .HasMaxLength(100);
+        
         builder.HasOne(c => c.CampaignImage)
-            .WithMany(i => i.Campaigns)
+            .WithMany(i => i.CampaignsWithImage)
             .HasForeignKey(c => c.CampaignImageId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }

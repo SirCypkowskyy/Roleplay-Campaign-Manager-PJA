@@ -43,6 +43,12 @@ public class Campaign : BaseEntity<Guid>
     /// Czy kampania jest publiczna
     /// </summary>
     public bool IsPublic { get; set; } = false;
+
+    /// <summary>
+    /// Waluta w grze
+    /// </summary>
+    [MaxLength(100)]
+    public string? GameCurrency { get; set; }
     
     /// <summary>
     /// Postacie w ramach kampanii

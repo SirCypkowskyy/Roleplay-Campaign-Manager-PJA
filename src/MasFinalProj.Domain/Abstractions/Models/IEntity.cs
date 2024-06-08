@@ -3,7 +3,7 @@ namespace MasFinalProj.Domain.Abstractions.Models;
 /// <summary>
 ///     Interfejs reprezentujący encję
 /// </summary>
-internal interface IEntity<TKey> where TKey : struct
+internal interface IEntity<TKey>
 {
     /// <summary>
     ///     Identyfikator encji

@@ -14,7 +14,7 @@ public class ModeratorConfiguration : IEntityTypeConfiguration<Moderator>
     {
         builder.HasBaseType<User>();
         
-        builder.Property(m => m.StaffSince)
+        builder.Property(m => m.StaffSinceUtc)
             .IsRequired();
     }
 }

@@ -19,22 +19,20 @@ public class MessageConfiguration : IEntityTypeConfiguration<Message>
 
         builder.Property(m => m.CreatedBy).IsRequired();
         builder.Property(m => m.CreatedAtUtc).IsRequired();
-        builder.Property(m => m.ModifiedAtUtc);
-        builder.Property(m => m.ModifiedBy);
 
         builder.HasOne(m => m.Campaign)
             .WithMany(c => c.Messages)
             .HasForeignKey(m => m.CampaignId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(m => m.CharacterAuthor)
-            .WithMany()
+            .WithMany(ch => ch.Messages)
             .HasForeignKey(m => m.CharacterAuthorId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasOne(m => m.Author)
-            .WithMany()
+            .WithMany(u => u.Messages)
             .HasForeignKey(m => m.AuthorId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using MasFinalProj.Domain.Abstractions.Models;
 
 namespace MasFinalProj.Domain.Models.Users.New;
@@ -20,6 +21,7 @@ public class RefreshToken : BaseEntity<Guid>
     /// <summary>
     /// Wartość tokenu
     /// </summary>
+    [MaxLength(64)]
     public string Value { get; set; }
     
     /// <summary>

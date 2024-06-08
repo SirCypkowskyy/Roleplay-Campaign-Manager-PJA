@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using MasFinalProj.Domain.Abstractions.Models;
 using MasFinalProj.Domain.Models.Campaigns;
 using MasFinalProj.Domain.Models.Campaigns.Characters;
+using MasFinalProj.Domain.Models.Users;
 
 namespace MasFinalProj.Domain.Models.Common;
 
@@ -32,9 +33,14 @@ public class Image : BaseEntity<long>
     public string Checksum { get; set; }
     
     /// <summary>
+    /// Użytkownicy, którzy posiadają to zdjęcie
+    /// </summary>
+    public virtual ICollection<User> UsersWithImage { get; set; }
+    
+    /// <summary>
     /// Kampanie, do których przypisane jest zdjęcie
     /// </summary>
-    public virtual ICollection<Campaign> Campaigns { get; set; }
+    public virtual ICollection<Campaign> CampaignsWithImage { get; set; }
     
     /// <summary>
     /// Postacie, do których przypisane jest zdjęcie

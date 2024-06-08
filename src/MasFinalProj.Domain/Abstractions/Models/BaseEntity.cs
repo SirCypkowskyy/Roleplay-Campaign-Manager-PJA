@@ -1,12 +1,12 @@
 namespace MasFinalProj.Domain.Abstractions.Models;
 
 /// <summary>
-///     Encja bazowa dla wszystkich encji w systemie
+/// Encja bazowa dla wszystkich encji w systemie
 /// </summary>
 /// <typeparam name="TKey">
-///     Typ klucza głównego
+/// Typ klucza głównego
 /// </typeparam>
-public abstract class BaseEntity<TKey> : IEntity<TKey>, IAuditableEntity where TKey : struct
+public abstract class BaseEntity<TKey> : IEntity<TKey>, IAuditableEntity
 {
     /// <inheritdoc />
     public string CreatedBy { get; set; }

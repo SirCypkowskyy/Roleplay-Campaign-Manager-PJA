@@ -28,18 +28,24 @@ public class CharacterConfiguration : IEntityTypeConfiguration<Character>
             .IsRequired(false)
             .HasMaxLength(2500);
 
-        builder.Property(c => c.CharacterImageId);
+        builder.Property(c => c.CharacterImageId)
+            .IsRequired(false);
+        
+        builder.Property(c => c.PlayerOwnerId)
+            .IsRequired(false);
+        
+        builder.Property(c => c.Money)
+            .IsRequired()
+            .HasDefaultValue(0);
         
         builder.HasOne(c => c.PlayerOwner)
             .WithMany(p => p.ControlledCharacters)
             .HasForeignKey(c => c.PlayerOwnerId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.SetNull);
         
         builder.HasOne(c => c.CharacterImage)
             .WithMany(i => i.Characters)
             .HasForeignKey(c => c.CharacterImageId)
-            .OnDelete(DeleteBehavior.NoAction);
-        
-      
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }

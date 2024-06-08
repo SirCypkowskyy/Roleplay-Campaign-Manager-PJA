@@ -43,6 +43,10 @@ namespace MasFinalProj.Persistence.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
+                    b.Property<string>("GameCurrency")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<bool>("IsArchived")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -89,7 +93,7 @@ namespace MasFinalProj.Persistence.Migrations
                     b.Property<Guid?>("CampaignId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<long>("CharacterImageId")
+                    b.Property<long?>("CharacterImageId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreatedAtUtc")
@@ -109,6 +113,11 @@ namespace MasFinalProj.Persistence.Migrations
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("Money")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(52)
@@ -126,6 +135,54 @@ namespace MasFinalProj.Persistence.Migrations
                     b.HasIndex("PlayerOwnerId");
 
                     b.ToTable("Characters");
+                });
+
+            modelBuilder.Entity("MasFinalProj.Domain.Models.Campaigns.Characters.CharacterAttribute", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("CharacterId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(21)
+                        .HasColumnType("nvarchar(21)");
+
+                    b.Property<DateTime?>("ModifiedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CharacterId");
+
+                    b.ToTable("CharacterAttribute");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("CharacterAttribute");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("MasFinalProj.Domain.Models.Campaigns.Characters.CharacterRelationWith", b =>
@@ -174,51 +231,6 @@ namespace MasFinalProj.Persistence.Migrations
                     b.ToTable("CharacterRelationsWith");
                 });
 
-            modelBuilder.Entity("MasFinalProj.Domain.Models.Campaigns.Item", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<long>("CharacterId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Condition")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTime?>("ModifiedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Value")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CharacterId");
-
-                    b.ToTable("Items");
-                });
-
             modelBuilder.Entity("MasFinalProj.Domain.Models.Campaigns.Message", b =>
                 {
                     b.Property<long>("Id")
@@ -232,9 +244,6 @@ namespace MasFinalProj.Persistence.Migrations
 
                     b.Property<Guid>("CampaignId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<long?>("CampaignUserId")
-                        .HasColumnType("bigint");
 
                     b.Property<long?>("CharacterAuthorId")
                         .HasColumnType("bigint");
@@ -263,8 +272,6 @@ namespace MasFinalProj.Persistence.Migrations
 
                     b.HasIndex("CampaignId");
 
-                    b.HasIndex("CampaignUserId");
-
                     b.HasIndex("CharacterAuthorId");
 
                     b.ToTable("Messages");
@@ -279,6 +286,9 @@ namespace MasFinalProj.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<long>("CampaignUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("CharacterAttributeId")
                         .HasColumnType("bigint");
 
                     b.Property<long?>("CharacterId")
@@ -296,9 +306,6 @@ namespace MasFinalProj.Persistence.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<long?>("ItemId")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime?>("ModifiedAtUtc")
                         .HasColumnType("datetime2");
 
@@ -307,61 +314,18 @@ namespace MasFinalProj.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CampaignUserId");
 
-                    b.HasIndex("CharacterId");
+                    b.HasIndex("CharacterAttributeId");
 
-                    b.HasIndex("ItemId");
+                    b.HasIndex("CharacterId");
 
                     b.ToTable("Notes");
-                });
-
-            modelBuilder.Entity("MasFinalProj.Domain.Models.Campaigns.Stat", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<long>("CharacterId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTime?>("ModifiedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CharacterId");
-
-                    b.ToTable("Stats");
                 });
 
             modelBuilder.Entity("MasFinalProj.Domain.Models.Campaigns.Users.CampaignUser", b =>
@@ -456,6 +420,78 @@ namespace MasFinalProj.Persistence.Migrations
                     b.ToTable("Images");
                 });
 
+            modelBuilder.Entity("MasFinalProj.Domain.Models.Users.New.BlacklistedEmail", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(52)
+                        .HasColumnType("nvarchar(52)");
+
+                    b.Property<DateTime?>("ModifiedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("BlacklistedEmail");
+                });
+
+            modelBuilder.Entity("MasFinalProj.Domain.Models.Users.New.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ExpiryDateUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ModifiedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("Value")
+                        .IsUnique();
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("MasFinalProj.Domain.Models.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -472,6 +508,12 @@ namespace MasFinalProj.Persistence.Migrations
                     b.Property<string>("Description")
                         .HasMaxLength(2500)
                         .HasColumnType("nvarchar(2500)");
+
+                    b.Property<long?>("DiscordId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("DiscordUsername")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
@@ -502,7 +544,7 @@ namespace MasFinalProj.Persistence.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
-                    b.Property<long>("ProfileImageId")
+                    b.Property<long?>("ProfileImageId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Username")
@@ -517,11 +559,54 @@ namespace MasFinalProj.Persistence.Migrations
 
                     b.HasIndex("ProfileImageId");
 
+                    b.HasIndex("Username")
+                        .IsUnique();
+
                     b.ToTable("Users");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("User");
 
                     b.UseTphMappingStrategy();
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("5b318ef4-5796-4d7c-bf02-1d9237279114"),
+                            CreatedAtUtc = new DateTime(2024, 6, 8, 0, 22, 10, 839, DateTimeKind.Utc).AddTicks(5498),
+                            CreatedBy = "Seed",
+                            Description = "Testowy użytkownik",
+                            Email = "user@s24759masfinal.com",
+                            IsActive = false,
+                            PasswordHash = "f/Kidhc7UXS6OL68U5rddhagfcg7vuFaYMNpW904tqs=",
+                            PasswordSalt = "APIAA0y3GhGAgOqmd8Ydsw==",
+                            Username = "BaseUser"
+                        });
+                });
+
+            modelBuilder.Entity("MasFinalProj.Domain.Models.Campaigns.Characters.Item", b =>
+                {
+                    b.HasBaseType("MasFinalProj.Domain.Models.Campaigns.Characters.CharacterAttribute");
+
+                    b.Property<string>("Condition")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Modifier")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("MoneyValue")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasDiscriminator().HasValue("Item");
+                });
+
+            modelBuilder.Entity("MasFinalProj.Domain.Models.Campaigns.Characters.Stat", b =>
+                {
+                    b.HasBaseType("MasFinalProj.Domain.Models.Campaigns.Characters.CharacterAttribute");
+
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasDiscriminator().HasValue("Stat");
                 });
 
             modelBuilder.Entity("MasFinalProj.Domain.Models.Campaigns.Users.CampaignUserGameMaster", b =>
@@ -546,29 +631,44 @@ namespace MasFinalProj.Persistence.Migrations
                     b.HasDiscriminator().HasValue("CampaignUserPlayer");
                 });
 
-            modelBuilder.Entity("MasFinalProj.Domain.Models.Users.Admin", b =>
-                {
-                    b.HasBaseType("MasFinalProj.Domain.Models.Users.User");
-
-                    b.HasDiscriminator().HasValue("Admin");
-                });
-
             modelBuilder.Entity("MasFinalProj.Domain.Models.Users.Moderator", b =>
                 {
                     b.HasBaseType("MasFinalProj.Domain.Models.Users.User");
 
-                    b.Property<DateTime>("StaffSince")
+                    b.Property<DateTime>("StaffSinceUtc")
                         .HasColumnType("datetime2");
 
                     b.HasDiscriminator().HasValue("Moderator");
                 });
 
+            modelBuilder.Entity("MasFinalProj.Domain.Models.Users.Admin", b =>
+                {
+                    b.HasBaseType("MasFinalProj.Domain.Models.Users.Moderator");
+
+                    b.HasDiscriminator().HasValue("Admin");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("e016530e-94ba-478a-9920-e28306bd8baf"),
+                            CreatedAtUtc = new DateTime(2024, 6, 8, 0, 22, 10, 831, DateTimeKind.Utc).AddTicks(9995),
+                            CreatedBy = "Seed",
+                            Description = "Base admin account",
+                            Email = "b.admin@s24759masfinal.com",
+                            IsActive = false,
+                            PasswordHash = "FTqLxyE6B/Ks0yQVb2IfQJ4pbPBhUAzh+F1HL0eaqHk=",
+                            PasswordSalt = "1Oca//Nkf940tKuMIY7I+w==",
+                            Username = "BaseAdmin",
+                            StaffSinceUtc = new DateTime(2024, 6, 8, 0, 22, 10, 831, DateTimeKind.Utc).AddTicks(9993)
+                        });
+                });
+
             modelBuilder.Entity("MasFinalProj.Domain.Models.Campaigns.Campaign", b =>
                 {
                     b.HasOne("MasFinalProj.Domain.Models.Common.Image", "CampaignImage")
-                        .WithMany("Campaigns")
+                        .WithMany("CampaignsWithImage")
                         .HasForeignKey("CampaignImageId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("CampaignImage");
                 });
@@ -582,17 +682,27 @@ namespace MasFinalProj.Persistence.Migrations
                     b.HasOne("MasFinalProj.Domain.Models.Common.Image", "CharacterImage")
                         .WithMany("Characters")
                         .HasForeignKey("CharacterImageId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("MasFinalProj.Domain.Models.Campaigns.Users.CampaignUserPlayer", "PlayerOwner")
                         .WithMany("ControlledCharacters")
                         .HasForeignKey("PlayerOwnerId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("CharacterImage");
 
                     b.Navigation("PlayerOwner");
+                });
+
+            modelBuilder.Entity("MasFinalProj.Domain.Models.Campaigns.Characters.CharacterAttribute", b =>
+                {
+                    b.HasOne("MasFinalProj.Domain.Models.Campaigns.Characters.Character", "Character")
+                        .WithMany("CharacterAttributes")
+                        .HasForeignKey("CharacterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Character");
                 });
 
             modelBuilder.Entity("MasFinalProj.Domain.Models.Campaigns.Characters.CharacterRelationWith", b =>
@@ -614,39 +724,24 @@ namespace MasFinalProj.Persistence.Migrations
                     b.Navigation("ToCharacter");
                 });
 
-            modelBuilder.Entity("MasFinalProj.Domain.Models.Campaigns.Item", b =>
-                {
-                    b.HasOne("MasFinalProj.Domain.Models.Campaigns.Characters.Character", "Character")
-                        .WithMany("Items")
-                        .HasForeignKey("CharacterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Character");
-                });
-
             modelBuilder.Entity("MasFinalProj.Domain.Models.Campaigns.Message", b =>
                 {
                     b.HasOne("MasFinalProj.Domain.Models.Campaigns.Users.CampaignUser", "Author")
-                        .WithMany()
+                        .WithMany("Messages")
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("MasFinalProj.Domain.Models.Campaigns.Campaign", "Campaign")
                         .WithMany("Messages")
                         .HasForeignKey("CampaignId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MasFinalProj.Domain.Models.Campaigns.Users.CampaignUser", null)
-                        .WithMany("Messages")
-                        .HasForeignKey("CampaignUserId");
-
                     b.HasOne("MasFinalProj.Domain.Models.Campaigns.Characters.Character", "CharacterAuthor")
-                        .WithMany()
+                        .WithMany("Messages")
                         .HasForeignKey("CharacterAuthorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Author");
 
@@ -663,39 +758,39 @@ namespace MasFinalProj.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MasFinalProj.Domain.Models.Campaigns.Characters.CharacterAttribute", "CharacterAttribute")
+                        .WithMany("Notes")
+                        .HasForeignKey("CharacterAttributeId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("MasFinalProj.Domain.Models.Campaigns.Characters.Character", "Character")
                         .WithMany("Notes")
-                        .HasForeignKey("CharacterId");
-
-                    b.HasOne("MasFinalProj.Domain.Models.Campaigns.Item", "Item")
-                        .WithMany()
-                        .HasForeignKey("ItemId");
+                        .HasForeignKey("CharacterId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("CampaignUser");
 
                     b.Navigation("Character");
 
-                    b.Navigation("Item");
+                    b.Navigation("CharacterAttribute");
                 });
 
-            modelBuilder.Entity("MasFinalProj.Domain.Models.Campaigns.Stat", b =>
+            modelBuilder.Entity("MasFinalProj.Domain.Models.Users.New.RefreshToken", b =>
                 {
-                    b.HasOne("MasFinalProj.Domain.Models.Campaigns.Characters.Character", "Character")
-                        .WithMany("Stats")
-                        .HasForeignKey("CharacterId")
+                    b.HasOne("MasFinalProj.Domain.Models.Users.User", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Character");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MasFinalProj.Domain.Models.Users.User", b =>
                 {
                     b.HasOne("MasFinalProj.Domain.Models.Common.Image", "ProfileImage")
-                        .WithMany()
-                        .HasForeignKey("ProfileImageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("UsersWithImage")
+                        .HasForeignKey("ProfileImageId");
 
                     b.Navigation("ProfileImage");
                 });
@@ -751,15 +846,20 @@ namespace MasFinalProj.Persistence.Migrations
 
             modelBuilder.Entity("MasFinalProj.Domain.Models.Campaigns.Characters.Character", b =>
                 {
-                    b.Navigation("Items");
+                    b.Navigation("CharacterAttributes");
+
+                    b.Navigation("Messages");
 
                     b.Navigation("Notes");
 
                     b.Navigation("RelationsFromCharacterToOthers");
 
                     b.Navigation("RelationsFromOthersToCharacter");
+                });
 
-                    b.Navigation("Stats");
+            modelBuilder.Entity("MasFinalProj.Domain.Models.Campaigns.Characters.CharacterAttribute", b =>
+                {
+                    b.Navigation("Notes");
                 });
 
             modelBuilder.Entity("MasFinalProj.Domain.Models.Campaigns.Users.CampaignUser", b =>
@@ -771,9 +871,11 @@ namespace MasFinalProj.Persistence.Migrations
 
             modelBuilder.Entity("MasFinalProj.Domain.Models.Common.Image", b =>
                 {
-                    b.Navigation("Campaigns");
+                    b.Navigation("CampaignsWithImage");
 
                     b.Navigation("Characters");
+
+                    b.Navigation("UsersWithImage");
                 });
 
             modelBuilder.Entity("MasFinalProj.Domain.Models.Users.User", b =>
@@ -781,6 +883,8 @@ namespace MasFinalProj.Persistence.Migrations
                     b.Navigation("CampaignsAsGameMaster");
 
                     b.Navigation("CampaignsAsPlayer");
+
+                    b.Navigation("RefreshTokens");
                 });
 
             modelBuilder.Entity("MasFinalProj.Domain.Models.Campaigns.Users.CampaignUserPlayer", b =>
