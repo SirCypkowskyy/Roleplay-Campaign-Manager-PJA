@@ -16,11 +16,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "MasFinalProj.Web", "src\MasFinalProj.Web\MasFinalProj.Web.esproj", "{5D063767-C677-444D-833C-9C63342A8D47}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Logs", "Logs", "{D5772D62-B693-4B7E-ACDD-CDC9D7D2FF69}"
-	ProjectSection(SolutionItems) = preProject
-		src\Logs\log20240607.txt = src\Logs\log20240607.txt
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +44,5 @@ Global
 		{DF7C9E80-1D6E-440F-81CF-79EFFE96D247} = {7CF9262D-1379-4704-A8DB-38365DE89D45}
 		{3A6A3C38-2B95-40CE-BCF0-B3BD54D4E556} = {7CF9262D-1379-4704-A8DB-38365DE89D45}
 		{5D063767-C677-444D-833C-9C63342A8D47} = {7CF9262D-1379-4704-A8DB-38365DE89D45}
-		{D5772D62-B693-4B7E-ACDD-CDC9D7D2FF69} = {87321AA7-85BD-425E-869E-981D4ECDEA9A}
 	EndGlobalSection
 EndGlobal
