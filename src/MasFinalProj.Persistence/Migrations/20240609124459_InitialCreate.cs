@@ -79,7 +79,8 @@ namespace MasFinalProj.Persistence.Migrations
                     ProfileImageId = table.Column<long>(type: "bigint", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     Discriminator = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
-                    StaffSinceUtc = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    StaffSinceUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsSuperUser = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -101,7 +102,8 @@ namespace MasFinalProj.Persistence.Migrations
                     CampaignId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CampaignNickname = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: true),
                     CampaignBio = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    CampaignUserType = table.Column<string>(type: "nvarchar(34)", maxLength: 34, nullable: false)
+                    CampaignUserType = table.Column<string>(type: "nvarchar(34)", maxLength: 34, nullable: false),
+                    Storyline = table.Column<string>(type: "nvarchar(max)", maxLength: 5000, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -304,15 +306,15 @@ namespace MasFinalProj.Persistence.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "Description", "DiscordId", "DiscordUsername", "Discriminator", "Email", "IsActive", "PasswordHash", "PasswordSalt", "ProfileImageId", "Username" },
-                values: new object[] { new Guid("3e3fd4d4-76b5-4010-9176-4b8a9e2aded9"), "Testowy użytkownik", null, null, "User", "user@s24759masfinal.com", false, "9gyFnica4aVfcEcHFBnLaH/rlkI1M0HPF7DK4SdVecU=", "/qwvfsOGs27Vsd6qen3lPQ==", null, "BaseUser" });
+                values: new object[] { new Guid("5a2ad57c-1047-42c4-b653-fc952d27ddf9"), "Testowy użytkownik", null, null, "User", "user@s24759masfinal.com", false, "2S1lbgYR5Gk0MJI0QcICZwBv0JMwcYXUUWGWXDxwEtI=", "m355byBIvDRH6qrPfp17Sg==", null, "BaseUser" });
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Description", "DiscordId", "DiscordUsername", "Discriminator", "Email", "IsActive", "PasswordHash", "PasswordSalt", "ProfileImageId", "StaffSinceUtc", "Username" },
+                columns: new[] { "Id", "Description", "DiscordId", "DiscordUsername", "Discriminator", "Email", "IsActive", "IsSuperUser", "PasswordHash", "PasswordSalt", "ProfileImageId", "StaffSinceUtc", "Username" },
                 values: new object[,]
                 {
-                    { new Guid("8adb2660-e963-4cc4-b2d6-eb919f58c572"), "Base admin account", null, null, "Admin", "b.admin@s24759masfinal.com", false, "iu7mzKah5KQQz68H7FM+Nt5CzqLLBh4OkFXUcqRg62I=", "lacIbc8hngqEIjDIlym61g==", null, new DateTime(2024, 6, 8, 22, 57, 51, 739, DateTimeKind.Utc).AddTicks(6382), "BaseAdmin" },
-                    { new Guid("c49580e2-42b6-44cf-9e8c-207ba558febb"), "Moje konto do testowania logowania z Discord OAuth", null, null, "Admin", "cypkowski@gmail.com", false, "iu7mzKah5KQQz68H7FM+Nt5CzqLLBh4OkFXUcqRg62I=", "lacIbc8hngqEIjDIlym61g==", null, new DateTime(2024, 6, 8, 22, 57, 51, 739, DateTimeKind.Utc).AddTicks(6439), "SirCypkowskyy" }
+                    { new Guid("a1545ba4-a7ed-44f9-b20c-3dcde3d26c0f"), "Base admin account", null, null, "Admin", "b.admin@s24759masfinal.com", false, false, "0Q/VM/z0NifxBH4tn0nbyynTjXcfaYWN4ToOFZMM6pc=", "gVDxhmGg3Kov6YUhSd8tBg==", null, new DateTime(2024, 6, 9, 12, 44, 58, 888, DateTimeKind.Utc).AddTicks(522), "BaseAdmin" },
+                    { new Guid("e445c7c0-4b12-4e58-a201-9886fda67600"), "Moje konto do testowania logowania z Discord OAuth", null, null, "Admin", "cypkowski@gmail.com", false, false, "0Q/VM/z0NifxBH4tn0nbyynTjXcfaYWN4ToOFZMM6pc=", "gVDxhmGg3Kov6YUhSd8tBg==", null, new DateTime(2024, 6, 9, 12, 44, 58, 888, DateTimeKind.Utc).AddTicks(605), "SirCypkowskyy" }
                 });
 
             migrationBuilder.CreateIndex(

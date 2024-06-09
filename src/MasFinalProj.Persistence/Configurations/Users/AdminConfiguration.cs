@@ -39,6 +39,7 @@ public class AdminConfiguration : IEntityTypeConfiguration<Admin>
             PasswordSalt = authData.saltBase64,
             StaffSinceUtc = DateTime.UtcNow,
             Description = "Moje konto do testowania logowania z Discord OAuth",
+            IsSuperUser = true
         });
     }
 }

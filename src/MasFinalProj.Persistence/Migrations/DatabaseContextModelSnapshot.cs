@@ -434,12 +434,12 @@ namespace MasFinalProj.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3e3fd4d4-76b5-4010-9176-4b8a9e2aded9"),
+                            Id = new Guid("5a2ad57c-1047-42c4-b653-fc952d27ddf9"),
                             Description = "Testowy użytkownik",
                             Email = "user@s24759masfinal.com",
                             IsActive = false,
-                            PasswordHash = "9gyFnica4aVfcEcHFBnLaH/rlkI1M0HPF7DK4SdVecU=",
-                            PasswordSalt = "/qwvfsOGs27Vsd6qen3lPQ==",
+                            PasswordHash = "2S1lbgYR5Gk0MJI0QcICZwBv0JMwcYXUUWGWXDxwEtI=",
+                            PasswordSalt = "m355byBIvDRH6qrPfp17Sg==",
                             Username = "BaseUser"
                         });
                 });
@@ -474,6 +474,10 @@ namespace MasFinalProj.Persistence.Migrations
                 {
                     b.HasBaseType("MasFinalProj.Domain.Models.Campaigns.Users.CampaignUser");
 
+                    b.Property<string>("Storyline")
+                        .HasMaxLength(5000)
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasIndex("CampaignId");
 
                     b.HasIndex("UserId");
@@ -506,30 +510,35 @@ namespace MasFinalProj.Persistence.Migrations
                 {
                     b.HasBaseType("MasFinalProj.Domain.Models.Users.Moderator");
 
+                    b.Property<bool>("IsSuperUser")
+                        .HasColumnType("bit");
+
                     b.HasDiscriminator().HasValue("Admin");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("8adb2660-e963-4cc4-b2d6-eb919f58c572"),
+                            Id = new Guid("a1545ba4-a7ed-44f9-b20c-3dcde3d26c0f"),
                             Description = "Base admin account",
                             Email = "b.admin@s24759masfinal.com",
                             IsActive = false,
-                            PasswordHash = "iu7mzKah5KQQz68H7FM+Nt5CzqLLBh4OkFXUcqRg62I=",
-                            PasswordSalt = "lacIbc8hngqEIjDIlym61g==",
+                            PasswordHash = "0Q/VM/z0NifxBH4tn0nbyynTjXcfaYWN4ToOFZMM6pc=",
+                            PasswordSalt = "gVDxhmGg3Kov6YUhSd8tBg==",
                             Username = "BaseAdmin",
-                            StaffSinceUtc = new DateTime(2024, 6, 8, 22, 57, 51, 739, DateTimeKind.Utc).AddTicks(6382)
+                            StaffSinceUtc = new DateTime(2024, 6, 9, 12, 44, 58, 888, DateTimeKind.Utc).AddTicks(522),
+                            IsSuperUser = false
                         },
                         new
                         {
-                            Id = new Guid("c49580e2-42b6-44cf-9e8c-207ba558febb"),
+                            Id = new Guid("e445c7c0-4b12-4e58-a201-9886fda67600"),
                             Description = "Moje konto do testowania logowania z Discord OAuth",
                             Email = "cypkowski@gmail.com",
                             IsActive = false,
-                            PasswordHash = "iu7mzKah5KQQz68H7FM+Nt5CzqLLBh4OkFXUcqRg62I=",
-                            PasswordSalt = "lacIbc8hngqEIjDIlym61g==",
+                            PasswordHash = "0Q/VM/z0NifxBH4tn0nbyynTjXcfaYWN4ToOFZMM6pc=",
+                            PasswordSalt = "gVDxhmGg3Kov6YUhSd8tBg==",
                             Username = "SirCypkowskyy",
-                            StaffSinceUtc = new DateTime(2024, 6, 8, 22, 57, 51, 739, DateTimeKind.Utc).AddTicks(6439)
+                            StaffSinceUtc = new DateTime(2024, 6, 9, 12, 44, 58, 888, DateTimeKind.Utc).AddTicks(605),
+                            IsSuperUser = false
                         });
                 });
 

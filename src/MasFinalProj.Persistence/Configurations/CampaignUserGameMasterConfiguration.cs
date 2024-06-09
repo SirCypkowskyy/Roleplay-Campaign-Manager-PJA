@@ -13,6 +13,9 @@ public class CampaignUserGameMasterConfiguration : IEntityTypeConfiguration<Camp
     public void Configure(EntityTypeBuilder<CampaignUserGameMaster> builder)
     {
         builder.HasBaseType<CampaignUser>();
+        
+        builder.Property(cugm => cugm.Storyline)
+            .HasMaxLength(5000);
 
         builder.HasOne(cugm => cugm.User)
             .WithMany(u => u.CampaignsAsGameMaster)
