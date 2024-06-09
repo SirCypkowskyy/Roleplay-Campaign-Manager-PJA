@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using MasFinalProj.Domain.Abstractions.Models;
 
 namespace MasFinalProj.Domain.Repositories;
@@ -34,6 +35,18 @@ public interface IGenericRepository<TKey, TEntity> where TEntity : BaseEntity<TK
     /// Encja
     /// </returns>
     Task<TEntity?> GetByIdAsync(TKey id, bool asNoTracking = false);
+    
+    /// <summary>
+    /// Pobiera encję po predykacie
+    /// </summary>
+    /// <param name="predicate">
+    /// Predykat
+    /// </param>
+    /// <param name="asNoTracking">
+    /// Czy nie śledzić zmian
+    /// </param>
+    /// <returns></returns>
+    Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, bool asNoTracking = false);
 
     /// <summary>
     /// Dodaje encję

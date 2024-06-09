@@ -31,13 +31,6 @@ namespace MasFinalProj.Persistence.Migrations
                     b.Property<long?>("CampaignImageId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(2000)
@@ -56,12 +49,6 @@ namespace MasFinalProj.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
-
-                    b.Property<DateTime?>("ModifiedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -96,22 +83,9 @@ namespace MasFinalProj.Persistence.Migrations
                     b.Property<long?>("CharacterImageId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
-
-                    b.Property<DateTime?>("ModifiedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Money")
                         .ValueGeneratedOnAdd()
@@ -148,13 +122,6 @@ namespace MasFinalProj.Persistence.Migrations
                     b.Property<long>("CharacterId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
@@ -163,12 +130,6 @@ namespace MasFinalProj.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(21)
                         .HasColumnType("nvarchar(21)");
-
-                    b.Property<DateTime?>("ModifiedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -193,13 +154,6 @@ namespace MasFinalProj.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -207,12 +161,6 @@ namespace MasFinalProj.Persistence.Migrations
 
                     b.Property<long>("FromCharacterId")
                         .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("ModifiedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("RelationValue")
                         .HasPrecision(5, 2)
@@ -256,15 +204,8 @@ namespace MasFinalProj.Persistence.Migrations
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("ModifiedAtUtc")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -294,23 +235,10 @@ namespace MasFinalProj.Persistence.Migrations
                     b.Property<long?>("CharacterId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
-
-                    b.Property<DateTime?>("ModifiedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -352,19 +280,6 @@ namespace MasFinalProj.Persistence.Migrations
                         .HasMaxLength(34)
                         .HasColumnType("nvarchar(34)");
 
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("ModifiedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
@@ -393,13 +308,6 @@ namespace MasFinalProj.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ImageFormat")
                         .IsRequired()
                         .HasMaxLength(5)
@@ -407,12 +315,6 @@ namespace MasFinalProj.Persistence.Migrations
 
                     b.Property<string>("ImageName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("ModifiedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -426,30 +328,17 @@ namespace MasFinalProj.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(52)
                         .HasColumnType("nvarchar(52)");
-
-                    b.Property<DateTime?>("ModifiedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("BlacklistedEmail");
+                    b.ToTable("BlacklistedEmails");
                 });
 
             modelBuilder.Entity("MasFinalProj.Domain.Models.Users.New.RefreshToken", b =>
@@ -458,21 +347,8 @@ namespace MasFinalProj.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("ExpiryDateUtc")
                         .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ModifiedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -498,13 +374,6 @@ namespace MasFinalProj.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Description")
                         .HasMaxLength(2500)
                         .HasColumnType("nvarchar(2500)");
@@ -527,12 +396,6 @@ namespace MasFinalProj.Persistence.Migrations
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ModifiedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
@@ -571,14 +434,12 @@ namespace MasFinalProj.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("5b318ef4-5796-4d7c-bf02-1d9237279114"),
-                            CreatedAtUtc = new DateTime(2024, 6, 8, 0, 22, 10, 839, DateTimeKind.Utc).AddTicks(5498),
-                            CreatedBy = "Seed",
+                            Id = new Guid("3e3fd4d4-76b5-4010-9176-4b8a9e2aded9"),
                             Description = "Testowy użytkownik",
                             Email = "user@s24759masfinal.com",
                             IsActive = false,
-                            PasswordHash = "f/Kidhc7UXS6OL68U5rddhagfcg7vuFaYMNpW904tqs=",
-                            PasswordSalt = "APIAA0y3GhGAgOqmd8Ydsw==",
+                            PasswordHash = "9gyFnica4aVfcEcHFBnLaH/rlkI1M0HPF7DK4SdVecU=",
+                            PasswordSalt = "/qwvfsOGs27Vsd6qen3lPQ==",
                             Username = "BaseUser"
                         });
                 });
@@ -650,16 +511,25 @@ namespace MasFinalProj.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("e016530e-94ba-478a-9920-e28306bd8baf"),
-                            CreatedAtUtc = new DateTime(2024, 6, 8, 0, 22, 10, 831, DateTimeKind.Utc).AddTicks(9995),
-                            CreatedBy = "Seed",
+                            Id = new Guid("8adb2660-e963-4cc4-b2d6-eb919f58c572"),
                             Description = "Base admin account",
                             Email = "b.admin@s24759masfinal.com",
                             IsActive = false,
-                            PasswordHash = "FTqLxyE6B/Ks0yQVb2IfQJ4pbPBhUAzh+F1HL0eaqHk=",
-                            PasswordSalt = "1Oca//Nkf940tKuMIY7I+w==",
+                            PasswordHash = "iu7mzKah5KQQz68H7FM+Nt5CzqLLBh4OkFXUcqRg62I=",
+                            PasswordSalt = "lacIbc8hngqEIjDIlym61g==",
                             Username = "BaseAdmin",
-                            StaffSinceUtc = new DateTime(2024, 6, 8, 0, 22, 10, 831, DateTimeKind.Utc).AddTicks(9993)
+                            StaffSinceUtc = new DateTime(2024, 6, 8, 22, 57, 51, 739, DateTimeKind.Utc).AddTicks(6382)
+                        },
+                        new
+                        {
+                            Id = new Guid("c49580e2-42b6-44cf-9e8c-207ba558febb"),
+                            Description = "Moje konto do testowania logowania z Discord OAuth",
+                            Email = "cypkowski@gmail.com",
+                            IsActive = false,
+                            PasswordHash = "iu7mzKah5KQQz68H7FM+Nt5CzqLLBh4OkFXUcqRg62I=",
+                            PasswordSalt = "lacIbc8hngqEIjDIlym61g==",
+                            Username = "SirCypkowskyy",
+                            StaffSinceUtc = new DateTime(2024, 6, 8, 22, 57, 51, 739, DateTimeKind.Utc).AddTicks(6439)
                         });
                 });
 

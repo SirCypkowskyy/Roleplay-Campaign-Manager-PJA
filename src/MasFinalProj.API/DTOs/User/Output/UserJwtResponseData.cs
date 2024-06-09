@@ -8,7 +8,7 @@ public class UserJwtResponseData
     /// <summary>
     /// JWT token
     /// </summary>
-    public string JwtToken { get; set; }
+    public string Token { get; set; }
     
     /// <summary>
     /// Refresh token

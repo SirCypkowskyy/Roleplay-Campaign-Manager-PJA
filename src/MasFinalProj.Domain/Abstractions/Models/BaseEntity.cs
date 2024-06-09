@@ -6,20 +6,8 @@ namespace MasFinalProj.Domain.Abstractions.Models;
 /// <typeparam name="TKey">
 /// Typ klucza głównego
 /// </typeparam>
-public abstract class BaseEntity<TKey> : IEntity<TKey>, IAuditableEntity
+public abstract class BaseEntity<TKey> : IEntity<TKey>
 {
-    /// <inheritdoc />
-    public string CreatedBy { get; set; }
-
-    /// <inheritdoc />
-    public string? ModifiedBy { get; set; }
-
-    /// <inheritdoc />
-    public DateTime CreatedAtUtc { get; set; }
-
-    /// <inheritdoc />
-    public DateTime? ModifiedAtUtc { get; set; }
-
     /// <inheritdoc />
     public TKey Id { get; init; }
 }

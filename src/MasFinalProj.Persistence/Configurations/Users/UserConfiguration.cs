@@ -67,8 +67,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             PasswordHash = authData.hashPasswrdBase64,
             PasswordSalt = authData.saltBase64,
             Description = "Testowy użytkownik",
-            CreatedBy = "Seed",
-            CreatedAtUtc = DateTime.UtcNow
         });
     }
 }

@@ -8,13 +8,20 @@ namespace MasFinalProj.Domain.Models.Campaigns;
 /// <summary>
 /// Encja wiadomości w ramach kampanii
 /// </summary>
-public class Message : BaseEntity<long>
+public class Message : BaseEntity<long>, IAuditableEntity
 {
     /// <summary>
     /// Zawartość wiadomości
     /// </summary>
     [MaxLength(5000)]
     public string Content { get; set; }
+
+    /// <inheritdoc />
+    public DateTime CreatedAtUtc { get; set; }
+
+    /// <inheritdoc />
+    public DateTime? ModifiedAtUtc { get; set; }
+
 
     /// <summary>
     /// Kampania, w ramach której została wysłana wiadomość

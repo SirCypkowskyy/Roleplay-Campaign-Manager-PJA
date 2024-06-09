@@ -92,6 +92,11 @@ public class DatabaseContext : DbContext
     /// </summary>
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     
+    /// <summary>
+    /// Lista zablokowanych adresów email
+    /// </summary>
+    public DbSet<BlacklistedEmail> BlacklistedEmails { get; set; }
+    
     // /// <summary>
     // /// Kolekcja encji <typeparamref name="TEntity"/> z kluczem typu <typeparamref name="TKey"/>
     // /// </summary>
@@ -151,11 +156,9 @@ public class DatabaseContext : DbContext
             {
                 case EntityState.Added:
                     entry.Entity.CreatedAtUtc = utcNow;
-                    entry.Entity.CreatedBy = "System";
                     break;
                 case EntityState.Modified:
                     entry.Entity.ModifiedAtUtc = utcNow;
-                    entry.Entity.ModifiedBy = "System";
                     break;
                 case EntityState.Detached:
                 case EntityState.Unchanged:

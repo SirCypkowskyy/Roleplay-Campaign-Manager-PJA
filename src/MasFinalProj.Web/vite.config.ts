@@ -28,6 +28,7 @@ let serverProxies: Record<string, ProxyOptions> = {
   
 
 export default defineConfig({
+    
     plugins: [react(),],
     resolve: {
         alias: {
@@ -37,5 +38,5 @@ export default defineConfig({
     server: {
         proxy: serverProxies,
       port: backendPort,
-    }
+    },
 })

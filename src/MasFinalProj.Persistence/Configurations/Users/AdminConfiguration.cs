@@ -28,8 +28,17 @@ public class AdminConfiguration : IEntityTypeConfiguration<Admin>
             PasswordSalt = authData.saltBase64,
             StaffSinceUtc = DateTime.UtcNow,
             Description = "Base admin account",
-            CreatedBy = "Seed",
-            CreatedAtUtc = DateTime.UtcNow
+        });
+
+        builder.HasData(new Admin()
+        {
+            Id = Guid.NewGuid(),
+            Username = "SirCypkowskyy",
+            Email = "cypkowski@gmail.com",
+            PasswordHash = authData.hashPasswrdBase64,
+            PasswordSalt = authData.saltBase64,
+            StaffSinceUtc = DateTime.UtcNow,
+            Description = "Moje konto do testowania logowania z Discord OAuth",
         });
     }
 }

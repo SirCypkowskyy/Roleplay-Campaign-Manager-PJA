@@ -20,8 +20,6 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
-
         builder.Services.AddOptions<ConfigurationOptions>()
             .Bind(builder.Configuration)
             .ValidateDataAnnotations()
@@ -33,19 +31,27 @@ public class Program
         builder.Services.AddPersistence();
         
         builder.Services.AddControllers()
-            .AddJsonOptions(opts => { opts.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase; });
-
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(opts =>
+            .AddJsonOptions(opts =>
             {
+                // opts.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            });
+
+        builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(opts =>
+            {
+                opts.ClaimsIssuer = configurationOptions.JwtIssuer;
                 opts.RequireHttpsMetadata = false;
                 opts.SaveToken = true;
                 opts.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidIssuer = configurationOptions.JwtIssuer,
-                    ValidAudience = configurationOptions.JwtIssuer,
                     ValidateAudience = true,
+                    ValidAudience = configurationOptions.JwtIssuer,
+                    ValidIssuer = configurationOptions.JwtIssuer,
                     ValidateLifetime = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configurationOptions.JwtSecret)),
                     ValidateIssuerSigningKey = true
@@ -53,7 +59,7 @@ public class Program
             });
 
         builder.Services.AddAuthorization();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(opts =>
         {
@@ -72,27 +78,33 @@ public class Program
                 }
             });
 
-            opts.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
+            opts.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 In = ParameterLocation.Header,
                 Name = "Authorization",
                 Type = SecuritySchemeType.ApiKey,
                 Description = "Please enter into field the word 'Bearer' following by space and JWT"
             });
-
-            opts.OperationFilter<SecurityRequirementsOperationFilter>();
-
-            // Dokumentacja XML z komentarzów do kodu
-            var sharedXmlFile = $"{typeof(DatabaseContext).Assembly.GetName().Name}.xml";
-            var webApiXmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            var persistenceXmlFile = $"{typeof(User).Assembly.GetName().Name}.xml";
+            
+            opts.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
+            
+            // opts.OperationFilter<SecurityRequirementsOperationFilter>();
 
             var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             opts.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-            
-            // opts.IncludeXmlComments(webApiXmlFile);
-            // opts.IncludeXmlComments(sharedXmlFile);
-            // opts.IncludeXmlComments(persistenceXmlFile);
         });
 
         builder.Services.AddRouting(opts =>
@@ -107,6 +119,11 @@ public class Program
             opts.AssumeDefaultVersionWhenUnspecified = true;
             opts.ReportApiVersions = true;
             opts.ApiVersionReader = new UrlSegmentApiVersionReader();
+        })
+        .AddApiExplorer(options =>
+        {
+            options.GroupNameFormat = "'v'VVV";
+            options.SubstituteApiVersionInUrl = true;
         });
 
         builder.Services.AddCors(opts =>
@@ -130,7 +147,6 @@ public class Program
             });
         });
 
-        // Logowanie odczytu z konsoli
         builder.Logging.ClearProviders();
         builder.Host.UseSerilog((context, configuration) =>
         {
@@ -140,7 +156,6 @@ public class Program
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
@@ -149,8 +164,8 @@ public class Program
 
         app.UseHttpsRedirection();
 
-        app.UseAuthorization();
         app.UseAuthentication();
+        app.UseAuthorization();
 
         app.MapControllers();
 

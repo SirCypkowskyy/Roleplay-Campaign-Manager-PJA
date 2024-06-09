@@ -2,19 +2,32 @@ import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import React, {ReactElement, useEffect, useState} from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useDebounce} from "@uidotdev/usehooks";
 import {SiDiscord} from "@icons-pack/react-simple-icons";
+import Cookies from "js-cookie";
+import {useToast} from "@/components/ui/use-toast.ts";
+import {cn} from "@/lib/utils.ts";
+import {JwtResponse} from "@/lib/api/types.ts";
 
 export default function LoginPage(): ReactElement {
-
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [passwordValidationErrorMessage, setPasswordValidationErrorMessage] = useState("");
     const [emailValidationErrorMessage, setEmailValidationErrorMessage] = useState("");
     const [canLogin, setCanLogin] = useState(false);
+
     const debouncedEmail = useDebounce(email, 500);
     const debouncedPassword = useDebounce(password, 500);
+
+    const [loginLoading, setLoginLoading] = useState(false);
+    const [successLogin, setSuccessLogin] = useState(false);
+    const [errorLogin, setErrorLogin] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+
+    const navigate = useNavigate();
+    const debouncedSuccessLogin = useDebounce(successLogin, 500);
+    const { toast } = useToast();
 
     useEffect(() => {
         if (debouncedEmail)
@@ -28,9 +41,9 @@ export default function LoginPage(): ReactElement {
             validatePassword(debouncedPassword);
 
         passwordValidationErrorMessage && setPasswordValidationErrorMessage("");
-        
+
     }, [debouncedPassword]);
-    
+
     useEffect(() => {
         if (email && password && !emailValidationErrorMessage && !passwordValidationErrorMessage)
             setCanLogin(true);
@@ -38,6 +51,10 @@ export default function LoginPage(): ReactElement {
             setCanLogin(false);
     }, [email, password, emailValidationErrorMessage, passwordValidationErrorMessage]);
 
+    useEffect(() => {
+        if (debouncedSuccessLogin && successLogin)
+            navigate("/dashboard");
+    }, [successLogin]);
 
     const validateEmail = (email: string) => {
         if (!email.includes("@"))
@@ -54,6 +71,63 @@ export default function LoginPage(): ReactElement {
     }
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPassword(e.target.value);
+    }
+
+    /**
+     * Rozpatruje próbę zalogowania użytkownika
+     */
+    const handleSubmit = async () => {
+        if (!canLogin) return;
+        setSuccessLogin(false);
+        setErrorLogin(false);
+        setErrorMessage("");
+        setLoginLoading(true);
+
+        try {
+            const response = await fetch("api/v1/user/auth", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({email, password})
+            });
+            
+            if (!response.ok) {
+                if(response.status >= 400 && response.status < 500) 
+                    throw new Error("Invalid email or password");
+                else
+                    throw new Error("Server error");
+            }
+            
+            const convertedResponse = await response.json() as JwtResponse;
+           
+            setSuccessLogin(true);
+            toast({
+                title: "Success",
+                description: "You have successfully logged in",
+                duration: 2000
+            });
+            
+            Cookies.set("token", convertedResponse.token);
+            Cookies.set("refreshToken", convertedResponse.refreshToken);
+            
+            // navigate after 3 seconds
+            setTimeout(() => {
+                navigate("/dashboard");
+            }, 3000);
+            
+        } catch (e) {
+            setErrorMessage(e instanceof Error ? e.message : "An error occurred");
+            setErrorLogin(true);
+            toast({
+                title: "Error",
+                description: errorMessage,
+                duration: 2500,
+                variant: "destructive"
+            });
+        } finally {
+            setLoginLoading(false);
+        }
     }
 
     return (
@@ -96,7 +170,19 @@ export default function LoginPage(): ReactElement {
                                    error={passwordValidationErrorMessage}
                             />
                         </div>
-                        <Button type="submit" className="w-full" disabled={!canLogin}>
+                        {errorLogin && <div className="text-red-500 text-sm">{errorMessage}</div>}
+                        <Button type="submit" 
+                                className={cn("w-full")} disabled={!canLogin}
+                                onClick={async (e) => {
+                                    console.log("submit")
+                                    e.preventDefault();
+                                    await handleSubmit();
+                                }}
+                        >
+                            {loginLoading && <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0c-5.373 0-9.733 4.327-9.733 9.733H4z"/>
+                            </svg>}
                             Login
                         </Button>
                         <Button variant="outline" className="w-full">
@@ -115,7 +201,7 @@ export default function LoginPage(): ReactElement {
                 <img
                     src="/img/login-art.jpg"
                     alt="Image"
-                    className={`object-cover max-h-[94vh] w-full`}            
+                    className={`object-cover max-h-[94vh] w-full`}
                 />
             </div>
         </div>

@@ -7,8 +7,8 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useTheme } from "@/components/theme-provider"
 import {cn} from "@/lib/utils.ts";
+import {useTheme} from "@/providers/theme-provider.tsx";
 
 type ModeToggleProps = {
     className?: string

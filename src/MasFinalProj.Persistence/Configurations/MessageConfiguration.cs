@@ -17,7 +17,6 @@ public class MessageConfiguration : IEntityTypeConfiguration<Message>
 
         builder.Property(m => m.Content).IsRequired();
 
-        builder.Property(m => m.CreatedBy).IsRequired();
         builder.Property(m => m.CreatedAtUtc).IsRequired();
 
         builder.HasOne(m => m.Campaign)

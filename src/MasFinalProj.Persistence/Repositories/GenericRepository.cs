@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using MasFinalProj.Domain.Abstractions.Models;
 using MasFinalProj.Domain.Repositories;
 using MasFinalProj.Persistence.Data;
@@ -40,6 +41,14 @@ public class GenericRepository<TKey, TEntity> : IGenericRepository<TKey, TEntity
             return await _context.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(e => e.Id != null && e.Id.Equals(id));
 
         return await _context.Set<TEntity>().FindAsync(id);
+    }
+
+    /// <inheritdoc />
+    public async Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, bool asNoTracking = false)
+    {
+        return asNoTracking
+            ? await _context.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(predicate)
+            : await _context.Set<TEntity>().FirstOrDefaultAsync(predicate);
     }
 
     /// <inheritdoc />

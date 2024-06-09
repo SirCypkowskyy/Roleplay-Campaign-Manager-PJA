@@ -37,7 +37,13 @@ public static class DependencyInjection
             options.UseSqlServer(configurationOptions.Value.DbConnectionString);
         });
 
+        services.AddHttpClient("discordClient", c =>
+        {
+            c.BaseAddress = new Uri("https://discord.com/oauth2/");
+        });
+
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IDiscordAuthRepository, DiscordAuthRepository>();
 
         return services;
     }

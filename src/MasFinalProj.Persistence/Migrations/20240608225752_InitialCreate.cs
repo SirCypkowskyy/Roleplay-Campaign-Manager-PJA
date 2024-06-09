@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace MasFinalProj.Persistence.Migrations
 {
     /// <inheritdoc />
@@ -12,19 +14,15 @@ namespace MasFinalProj.Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "BlacklistedEmail",
+                name: "BlacklistedEmails",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(52)", maxLength: 52, nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Email = table.Column<string>(type: "nvarchar(52)", maxLength: 52, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BlacklistedEmail", x => x.Id);
+                    table.PrimaryKey("PK_BlacklistedEmails", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -36,11 +34,7 @@ namespace MasFinalProj.Persistence.Migrations
                     ImageName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ImageFormat = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
                     Base64Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Checksum = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Checksum = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -57,11 +51,7 @@ namespace MasFinalProj.Persistence.Migrations
                     CampaignImageId = table.Column<long>(type: "bigint", nullable: true),
                     IsArchived = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     IsPublic = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    GameCurrency = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    GameCurrency = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -89,11 +79,7 @@ namespace MasFinalProj.Persistence.Migrations
                     ProfileImageId = table.Column<long>(type: "bigint", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     Discriminator = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
-                    StaffSinceUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    StaffSinceUtc = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -115,11 +101,7 @@ namespace MasFinalProj.Persistence.Migrations
                     CampaignId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CampaignNickname = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: true),
                     CampaignBio = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    CampaignUserType = table.Column<string>(type: "nvarchar(34)", maxLength: 34, nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    CampaignUserType = table.Column<string>(type: "nvarchar(34)", maxLength: 34, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -145,11 +127,7 @@ namespace MasFinalProj.Persistence.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
-                    ExpiryDateUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    ExpiryDateUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -174,11 +152,7 @@ namespace MasFinalProj.Persistence.Migrations
                     CharacterImageId = table.Column<long>(type: "bigint", nullable: true),
                     Money = table.Column<decimal>(type: "decimal(18,2)", nullable: false, defaultValue: 0m),
                     PlayerOwnerId = table.Column<long>(type: "bigint", nullable: true),
-                    CampaignId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    CampaignId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -215,11 +189,7 @@ namespace MasFinalProj.Persistence.Migrations
                     MoneyValue = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     Condition = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Modifier = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Value = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Value = table.Column<decimal>(type: "decimal(18,2)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -241,11 +211,7 @@ namespace MasFinalProj.Persistence.Migrations
                     FromCharacterId = table.Column<long>(type: "bigint", nullable: false),
                     ToCharacterId = table.Column<long>(type: "bigint", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    RelationValue = table.Column<decimal>(type: "decimal(5,2)", precision: 5, scale: 2, nullable: true),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    RelationValue = table.Column<decimal>(type: "decimal(5,2)", precision: 5, scale: 2, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -271,13 +237,11 @@ namespace MasFinalProj.Persistence.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Content = table.Column<string>(type: "nvarchar(max)", maxLength: 5000, nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CampaignId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CharacterAuthorId = table.Column<long>(type: "bigint", nullable: true),
-                    AuthorId = table.Column<long>(type: "bigint", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    AuthorId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -312,11 +276,7 @@ namespace MasFinalProj.Persistence.Migrations
                     Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
                     CampaignUserId = table.Column<long>(type: "bigint", nullable: false),
                     CharacterId = table.Column<long>(type: "bigint", nullable: true),
-                    CharacterAttributeId = table.Column<long>(type: "bigint", nullable: true),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    CharacterAttributeId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -343,17 +303,21 @@ namespace MasFinalProj.Persistence.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "CreatedAtUtc", "CreatedBy", "Description", "DiscordId", "DiscordUsername", "Discriminator", "Email", "IsActive", "ModifiedAtUtc", "ModifiedBy", "PasswordHash", "PasswordSalt", "ProfileImageId", "Username" },
-                values: new object[] { new Guid("5b318ef4-5796-4d7c-bf02-1d9237279114"), new DateTime(2024, 6, 8, 0, 22, 10, 839, DateTimeKind.Utc).AddTicks(5498), "Seed", "Testowy użytkownik", null, null, "User", "user@s24759masfinal.com", false, null, null, "f/Kidhc7UXS6OL68U5rddhagfcg7vuFaYMNpW904tqs=", "APIAA0y3GhGAgOqmd8Ydsw==", null, "BaseUser" });
+                columns: new[] { "Id", "Description", "DiscordId", "DiscordUsername", "Discriminator", "Email", "IsActive", "PasswordHash", "PasswordSalt", "ProfileImageId", "Username" },
+                values: new object[] { new Guid("3e3fd4d4-76b5-4010-9176-4b8a9e2aded9"), "Testowy użytkownik", null, null, "User", "user@s24759masfinal.com", false, "9gyFnica4aVfcEcHFBnLaH/rlkI1M0HPF7DK4SdVecU=", "/qwvfsOGs27Vsd6qen3lPQ==", null, "BaseUser" });
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "CreatedAtUtc", "CreatedBy", "Description", "DiscordId", "DiscordUsername", "Discriminator", "Email", "IsActive", "ModifiedAtUtc", "ModifiedBy", "PasswordHash", "PasswordSalt", "ProfileImageId", "StaffSinceUtc", "Username" },
-                values: new object[] { new Guid("e016530e-94ba-478a-9920-e28306bd8baf"), new DateTime(2024, 6, 8, 0, 22, 10, 831, DateTimeKind.Utc).AddTicks(9995), "Seed", "Base admin account", null, null, "Admin", "b.admin@s24759masfinal.com", false, null, null, "FTqLxyE6B/Ks0yQVb2IfQJ4pbPBhUAzh+F1HL0eaqHk=", "1Oca//Nkf940tKuMIY7I+w==", null, new DateTime(2024, 6, 8, 0, 22, 10, 831, DateTimeKind.Utc).AddTicks(9993), "BaseAdmin" });
+                columns: new[] { "Id", "Description", "DiscordId", "DiscordUsername", "Discriminator", "Email", "IsActive", "PasswordHash", "PasswordSalt", "ProfileImageId", "StaffSinceUtc", "Username" },
+                values: new object[,]
+                {
+                    { new Guid("8adb2660-e963-4cc4-b2d6-eb919f58c572"), "Base admin account", null, null, "Admin", "b.admin@s24759masfinal.com", false, "iu7mzKah5KQQz68H7FM+Nt5CzqLLBh4OkFXUcqRg62I=", "lacIbc8hngqEIjDIlym61g==", null, new DateTime(2024, 6, 8, 22, 57, 51, 739, DateTimeKind.Utc).AddTicks(6382), "BaseAdmin" },
+                    { new Guid("c49580e2-42b6-44cf-9e8c-207ba558febb"), "Moje konto do testowania logowania z Discord OAuth", null, null, "Admin", "cypkowski@gmail.com", false, "iu7mzKah5KQQz68H7FM+Nt5CzqLLBh4OkFXUcqRg62I=", "lacIbc8hngqEIjDIlym61g==", null, new DateTime(2024, 6, 8, 22, 57, 51, 739, DateTimeKind.Utc).AddTicks(6439), "SirCypkowskyy" }
+                });
 
             migrationBuilder.CreateIndex(
-                name: "IX_BlacklistedEmail_Email",
-                table: "BlacklistedEmail",
+                name: "IX_BlacklistedEmails_Email",
+                table: "BlacklistedEmails",
                 column: "Email",
                 unique: true);
 
@@ -472,7 +436,7 @@ namespace MasFinalProj.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BlacklistedEmail");
+                name: "BlacklistedEmails");
 
             migrationBuilder.DropTable(
                 name: "CharacterRelationsWith");
