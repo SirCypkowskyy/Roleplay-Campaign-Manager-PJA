@@ -14,7 +14,8 @@ public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
     {
         builder.HasKey(rt => rt.Id);
         builder.Property(rt => rt.Id)
-            .ValueGeneratedOnAdd();
+            .ValueGeneratedOnAdd()
+            .HasColumnName("RefreshTokenId");
 
         builder.HasIndex(rt => rt.Value)
             .IsUnique();

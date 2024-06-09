@@ -3,14 +3,11 @@ using System.Text;
 using System.Text.Json;
 using Asp.Versioning;
 using MasFinalProj.Domain.Abstractions.Options;
-using MasFinalProj.Domain.Models.Users;
 using MasFinalProj.Persistence;
-using MasFinalProj.Persistence.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using Swashbuckle.AspNetCore.Filters;
 
 namespace MasFinalProj.API;
 
@@ -83,7 +80,7 @@ public class Program
                 In = ParameterLocation.Header,
                 Name = "Authorization",
                 Type = SecuritySchemeType.ApiKey,
-                Description = "Please enter into field the word 'Bearer' following by space and JWT"
+                Description = "Wprowadź token JWT w formacie `Bearer {token}`"
             });
             
             opts.AddSecurityRequirement(new OpenApiSecurityRequirement

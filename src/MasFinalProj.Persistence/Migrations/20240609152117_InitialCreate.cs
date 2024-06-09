@@ -17,35 +17,35 @@ namespace MasFinalProj.Persistence.Migrations
                 name: "BlacklistedEmails",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BlacklistedEmailId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(52)", maxLength: 52, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BlacklistedEmails", x => x.Id);
+                    table.PrimaryKey("PK_BlacklistedEmails", x => x.BlacklistedEmailId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Images",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    ImageId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ImageName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     ImageFormat = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
                     Base64Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Checksum = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Images", x => x.Id);
+                    table.PrimaryKey("PK_Images", x => x.ImageId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Campaigns",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CampaignId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(52)", maxLength: 52, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
                     CampaignImageId = table.Column<long>(type: "bigint", nullable: true),
@@ -55,12 +55,12 @@ namespace MasFinalProj.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Campaigns", x => x.Id);
+                    table.PrimaryKey("PK_Campaigns", x => x.CampaignId);
                     table.ForeignKey(
                         name: "FK_Campaigns_Images_CampaignImageId",
                         column: x => x.CampaignImageId,
                         principalTable: "Images",
-                        principalColumn: "Id",
+                        principalColumn: "ImageId",
                         onDelete: ReferentialAction.SetNull);
                 });
 
@@ -68,7 +68,7 @@ namespace MasFinalProj.Persistence.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Username = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(52)", maxLength: 52, nullable: false),
                     DiscordId = table.Column<long>(type: "bigint", nullable: true),
@@ -84,19 +84,19 @@ namespace MasFinalProj.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.UserId);
                     table.ForeignKey(
                         name: "FK_Users_Images_ProfileImageId",
                         column: x => x.ProfileImageId,
                         principalTable: "Images",
-                        principalColumn: "Id");
+                        principalColumn: "ImageId");
                 });
 
             migrationBuilder.CreateTable(
                 name: "CampaignUsers",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    CampaignUserId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CampaignId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -107,18 +107,18 @@ namespace MasFinalProj.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CampaignUsers", x => x.Id);
+                    table.PrimaryKey("PK_CampaignUsers", x => x.CampaignUserId);
                     table.ForeignKey(
                         name: "FK_CampaignUsers_Campaigns_CampaignId",
                         column: x => x.CampaignId,
                         principalTable: "Campaigns",
-                        principalColumn: "Id",
+                        principalColumn: "CampaignId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CampaignUsers_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id",
+                        principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -126,19 +126,19 @@ namespace MasFinalProj.Persistence.Migrations
                 name: "RefreshTokens",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RefreshTokenId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
                     ExpiryDateUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RefreshTokens", x => x.Id);
+                    table.PrimaryKey("PK_RefreshTokens", x => x.RefreshTokenId);
                     table.ForeignKey(
                         name: "FK_RefreshTokens_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id",
+                        principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -146,7 +146,7 @@ namespace MasFinalProj.Persistence.Migrations
                 name: "Characters",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    CharacterId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(52)", maxLength: 52, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
@@ -158,23 +158,23 @@ namespace MasFinalProj.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Characters", x => x.Id);
+                    table.PrimaryKey("PK_Characters", x => x.CharacterId);
                     table.ForeignKey(
                         name: "FK_Characters_CampaignUsers_PlayerOwnerId",
                         column: x => x.PlayerOwnerId,
                         principalTable: "CampaignUsers",
-                        principalColumn: "Id",
+                        principalColumn: "CampaignUserId",
                         onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Characters_Campaigns_CampaignId",
                         column: x => x.CampaignId,
                         principalTable: "Campaigns",
-                        principalColumn: "Id");
+                        principalColumn: "CampaignId");
                     table.ForeignKey(
                         name: "FK_Characters_Images_CharacterImageId",
                         column: x => x.CharacterImageId,
                         principalTable: "Images",
-                        principalColumn: "Id",
+                        principalColumn: "ImageId",
                         onDelete: ReferentialAction.SetNull);
                 });
 
@@ -182,9 +182,9 @@ namespace MasFinalProj.Persistence.Migrations
                 name: "CharacterAttribute",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    CharacterAttributeId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     CharacterId = table.Column<long>(type: "bigint", nullable: false),
                     Discriminator = table.Column<string>(type: "nvarchar(21)", maxLength: 21, nullable: false),
@@ -195,12 +195,12 @@ namespace MasFinalProj.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CharacterAttribute", x => x.Id);
+                    table.PrimaryKey("PK_CharacterAttribute", x => x.CharacterAttributeId);
                     table.ForeignKey(
                         name: "FK_CharacterAttribute_Characters_CharacterId",
                         column: x => x.CharacterId,
                         principalTable: "Characters",
-                        principalColumn: "Id",
+                        principalColumn: "CharacterId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -208,7 +208,7 @@ namespace MasFinalProj.Persistence.Migrations
                 name: "CharacterRelationsWith",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    CharacterRelationWithId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FromCharacterId = table.Column<long>(type: "bigint", nullable: false),
                     ToCharacterId = table.Column<long>(type: "bigint", nullable: false),
@@ -217,18 +217,18 @@ namespace MasFinalProj.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CharacterRelationsWith", x => x.Id);
+                    table.PrimaryKey("PK_CharacterRelationsWith", x => x.CharacterRelationWithId);
                     table.ForeignKey(
                         name: "FK_CharacterRelationsWith_Characters_FromCharacterId",
                         column: x => x.FromCharacterId,
                         principalTable: "Characters",
-                        principalColumn: "Id",
+                        principalColumn: "CharacterId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_CharacterRelationsWith_Characters_ToCharacterId",
                         column: x => x.ToCharacterId,
                         principalTable: "Characters",
-                        principalColumn: "Id",
+                        principalColumn: "CharacterId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -236,7 +236,7 @@ namespace MasFinalProj.Persistence.Migrations
                 name: "Messages",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    MessageId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Content = table.Column<string>(type: "nvarchar(max)", maxLength: 5000, nullable: false),
                     CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -247,24 +247,24 @@ namespace MasFinalProj.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Messages", x => x.Id);
+                    table.PrimaryKey("PK_Messages", x => x.MessageId);
                     table.ForeignKey(
                         name: "FK_Messages_CampaignUsers_AuthorId",
                         column: x => x.AuthorId,
                         principalTable: "CampaignUsers",
-                        principalColumn: "Id",
+                        principalColumn: "CampaignUserId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Messages_Campaigns_CampaignId",
                         column: x => x.CampaignId,
                         principalTable: "Campaigns",
-                        principalColumn: "Id",
+                        principalColumn: "CampaignId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Messages_Characters_CharacterAuthorId",
                         column: x => x.CharacterAuthorId,
                         principalTable: "Characters",
-                        principalColumn: "Id",
+                        principalColumn: "CharacterId",
                         onDelete: ReferentialAction.SetNull);
                 });
 
@@ -272,7 +272,7 @@ namespace MasFinalProj.Persistence.Migrations
                 name: "Notes",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    NoteId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
@@ -282,39 +282,39 @@ namespace MasFinalProj.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Notes", x => x.Id);
+                    table.PrimaryKey("PK_Notes", x => x.NoteId);
                     table.ForeignKey(
                         name: "FK_Notes_CampaignUsers_CampaignUserId",
                         column: x => x.CampaignUserId,
                         principalTable: "CampaignUsers",
-                        principalColumn: "Id",
+                        principalColumn: "CampaignUserId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Notes_CharacterAttribute_CharacterAttributeId",
                         column: x => x.CharacterAttributeId,
                         principalTable: "CharacterAttribute",
-                        principalColumn: "Id",
+                        principalColumn: "CharacterAttributeId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Notes_Characters_CharacterId",
                         column: x => x.CharacterId,
                         principalTable: "Characters",
-                        principalColumn: "Id",
+                        principalColumn: "CharacterId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Description", "DiscordId", "DiscordUsername", "Discriminator", "Email", "IsActive", "PasswordHash", "PasswordSalt", "ProfileImageId", "Username" },
-                values: new object[] { new Guid("5a2ad57c-1047-42c4-b653-fc952d27ddf9"), "Testowy użytkownik", null, null, "User", "user@s24759masfinal.com", false, "2S1lbgYR5Gk0MJI0QcICZwBv0JMwcYXUUWGWXDxwEtI=", "m355byBIvDRH6qrPfp17Sg==", null, "BaseUser" });
+                columns: new[] { "UserId", "Description", "DiscordId", "DiscordUsername", "Discriminator", "Email", "IsActive", "PasswordHash", "PasswordSalt", "ProfileImageId", "Username" },
+                values: new object[] { new Guid("0619405e-3acf-404e-af5b-eed744dc113b"), "Testowy użytkownik", null, null, "User", "user@s24759masfinal.com", false, "Ff+xPtB7y9flBPtmo2ix/werKeyj5OMF1+9hSNTz/3A=", "rgpUmgWs6xgGRziPUblVyQ==", null, "BaseUser" });
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Description", "DiscordId", "DiscordUsername", "Discriminator", "Email", "IsActive", "IsSuperUser", "PasswordHash", "PasswordSalt", "ProfileImageId", "StaffSinceUtc", "Username" },
+                columns: new[] { "UserId", "Description", "DiscordId", "DiscordUsername", "Discriminator", "Email", "IsActive", "IsSuperUser", "PasswordHash", "PasswordSalt", "ProfileImageId", "StaffSinceUtc", "Username" },
                 values: new object[,]
                 {
-                    { new Guid("a1545ba4-a7ed-44f9-b20c-3dcde3d26c0f"), "Base admin account", null, null, "Admin", "b.admin@s24759masfinal.com", false, false, "0Q/VM/z0NifxBH4tn0nbyynTjXcfaYWN4ToOFZMM6pc=", "gVDxhmGg3Kov6YUhSd8tBg==", null, new DateTime(2024, 6, 9, 12, 44, 58, 888, DateTimeKind.Utc).AddTicks(522), "BaseAdmin" },
-                    { new Guid("e445c7c0-4b12-4e58-a201-9886fda67600"), "Moje konto do testowania logowania z Discord OAuth", null, null, "Admin", "cypkowski@gmail.com", false, false, "0Q/VM/z0NifxBH4tn0nbyynTjXcfaYWN4ToOFZMM6pc=", "gVDxhmGg3Kov6YUhSd8tBg==", null, new DateTime(2024, 6, 9, 12, 44, 58, 888, DateTimeKind.Utc).AddTicks(605), "SirCypkowskyy" }
+                    { new Guid("0fd35957-0766-4d1d-bd2c-27a10e9b2b35"), "Base admin account", null, null, "Admin", "b.admin@s24759masfinal.com", false, false, "/IDyCYL8bd+Z4zsE6vNX5Mq8vABbFBbSg330v7elJmo=", "UmOydnims0pHhKcULiGGOw==", null, new DateTime(2024, 6, 9, 15, 21, 16, 869, DateTimeKind.Utc).AddTicks(695), "BaseAdmin" },
+                    { new Guid("8e68700f-ed48-4696-a1a3-24017d04135e"), "Moje konto do testowania logowania z Discord OAuth", null, null, "Admin", "cypkowski@gmail.com", false, true, "/IDyCYL8bd+Z4zsE6vNX5Mq8vABbFBbSg330v7elJmo=", "UmOydnims0pHhKcULiGGOw==", null, new DateTime(2024, 6, 9, 15, 21, 16, 869, DateTimeKind.Utc).AddTicks(725), "SirCypkowskyy" }
                 });
 
             migrationBuilder.CreateIndex(

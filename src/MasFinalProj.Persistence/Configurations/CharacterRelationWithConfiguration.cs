@@ -14,7 +14,8 @@ public class CharacterRelationWithConfiguration : IEntityTypeConfiguration<Chara
     {
         builder.HasKey(c => c.Id);
         builder.Property(c => c.Id)
-            .ValueGeneratedOnAdd();
+            .ValueGeneratedOnAdd()
+            .HasColumnName("CharacterRelationWithId");
 
         builder.Property(c => c.Description)
             .HasMaxLength(500)

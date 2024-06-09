@@ -12,7 +12,8 @@ public class CampaignConfiguration : IEntityTypeConfiguration<Campaign>
     {
         builder.HasKey(c => c.Id);
         builder.Property(c => c.Id)
-            .ValueGeneratedOnAdd();
+            .ValueGeneratedOnAdd()
+            .HasColumnName("CampaignId");
 
         builder.HasIndex(c => c.Name)
             .IsUnique();

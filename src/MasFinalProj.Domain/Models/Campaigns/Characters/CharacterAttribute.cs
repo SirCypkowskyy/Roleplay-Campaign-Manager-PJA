@@ -8,6 +8,7 @@ public abstract class CharacterAttribute : BaseEntity<long>
     /// <summary>
     /// Nazwa statystyki
     /// </summary>
+    [MaxLength(100)]
     public string Name { get; set; }
 
     /// <summary>

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MasFinalProj.Persistence.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240609124459_InitialCreate")]
+    [Migration("20240609152117_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -29,7 +29,8 @@ namespace MasFinalProj.Persistence.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("CampaignId");
 
                     b.Property<long?>("CampaignImageId")
                         .HasColumnType("bigint");
@@ -72,7 +73,8 @@ namespace MasFinalProj.Persistence.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("CharacterId");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
@@ -118,7 +120,8 @@ namespace MasFinalProj.Persistence.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("CharacterAttributeId");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
@@ -136,7 +139,8 @@ namespace MasFinalProj.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -153,7 +157,8 @@ namespace MasFinalProj.Persistence.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("CharacterRelationWithId");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
@@ -186,7 +191,8 @@ namespace MasFinalProj.Persistence.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("MessageId");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
@@ -225,7 +231,8 @@ namespace MasFinalProj.Persistence.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("NoteId");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
@@ -263,7 +270,8 @@ namespace MasFinalProj.Persistence.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("CampaignUserId");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
@@ -299,7 +307,8 @@ namespace MasFinalProj.Persistence.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("ImageId");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
@@ -318,7 +327,8 @@ namespace MasFinalProj.Persistence.Migrations
 
                     b.Property<string>("ImageName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -329,7 +339,8 @@ namespace MasFinalProj.Persistence.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("BlacklistedEmailId");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -348,7 +359,8 @@ namespace MasFinalProj.Persistence.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("RefreshTokenId");
 
                     b.Property<DateTime>("ExpiryDateUtc")
                         .HasColumnType("datetime2");
@@ -375,7 +387,8 @@ namespace MasFinalProj.Persistence.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("UserId");
 
                     b.Property<string>("Description")
                         .HasMaxLength(2500)
@@ -437,12 +450,12 @@ namespace MasFinalProj.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("5a2ad57c-1047-42c4-b653-fc952d27ddf9"),
+                            Id = new Guid("0619405e-3acf-404e-af5b-eed744dc113b"),
                             Description = "Testowy użytkownik",
                             Email = "user@s24759masfinal.com",
                             IsActive = false,
-                            PasswordHash = "2S1lbgYR5Gk0MJI0QcICZwBv0JMwcYXUUWGWXDxwEtI=",
-                            PasswordSalt = "m355byBIvDRH6qrPfp17Sg==",
+                            PasswordHash = "Ff+xPtB7y9flBPtmo2ix/werKeyj5OMF1+9hSNTz/3A=",
+                            PasswordSalt = "rgpUmgWs6xgGRziPUblVyQ==",
                             Username = "BaseUser"
                         });
                 });
@@ -521,27 +534,27 @@ namespace MasFinalProj.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("a1545ba4-a7ed-44f9-b20c-3dcde3d26c0f"),
+                            Id = new Guid("0fd35957-0766-4d1d-bd2c-27a10e9b2b35"),
                             Description = "Base admin account",
                             Email = "b.admin@s24759masfinal.com",
                             IsActive = false,
-                            PasswordHash = "0Q/VM/z0NifxBH4tn0nbyynTjXcfaYWN4ToOFZMM6pc=",
-                            PasswordSalt = "gVDxhmGg3Kov6YUhSd8tBg==",
+                            PasswordHash = "/IDyCYL8bd+Z4zsE6vNX5Mq8vABbFBbSg330v7elJmo=",
+                            PasswordSalt = "UmOydnims0pHhKcULiGGOw==",
                             Username = "BaseAdmin",
-                            StaffSinceUtc = new DateTime(2024, 6, 9, 12, 44, 58, 888, DateTimeKind.Utc).AddTicks(522),
+                            StaffSinceUtc = new DateTime(2024, 6, 9, 15, 21, 16, 869, DateTimeKind.Utc).AddTicks(695),
                             IsSuperUser = false
                         },
                         new
                         {
-                            Id = new Guid("e445c7c0-4b12-4e58-a201-9886fda67600"),
+                            Id = new Guid("8e68700f-ed48-4696-a1a3-24017d04135e"),
                             Description = "Moje konto do testowania logowania z Discord OAuth",
                             Email = "cypkowski@gmail.com",
                             IsActive = false,
-                            PasswordHash = "0Q/VM/z0NifxBH4tn0nbyynTjXcfaYWN4ToOFZMM6pc=",
-                            PasswordSalt = "gVDxhmGg3Kov6YUhSd8tBg==",
+                            PasswordHash = "/IDyCYL8bd+Z4zsE6vNX5Mq8vABbFBbSg330v7elJmo=",
+                            PasswordSalt = "UmOydnims0pHhKcULiGGOw==",
                             Username = "SirCypkowskyy",
-                            StaffSinceUtc = new DateTime(2024, 6, 9, 12, 44, 58, 888, DateTimeKind.Utc).AddTicks(605),
-                            IsSuperUser = false
+                            StaffSinceUtc = new DateTime(2024, 6, 9, 15, 21, 16, 869, DateTimeKind.Utc).AddTicks(725),
+                            IsSuperUser = true
                         });
                 });
 

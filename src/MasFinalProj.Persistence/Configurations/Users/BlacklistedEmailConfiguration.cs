@@ -14,7 +14,8 @@ public class BlacklistedEmailConfiguration : IEntityTypeConfiguration<Blackliste
     {
         builder.HasKey(be => be.Id);
         builder.Property(be => be.Id)
-            .ValueGeneratedOnAdd();
+            .ValueGeneratedOnAdd()
+            .HasColumnName("BlacklistedEmailId");
 
         builder.HasIndex(be => be.Email)
             .IsUnique();

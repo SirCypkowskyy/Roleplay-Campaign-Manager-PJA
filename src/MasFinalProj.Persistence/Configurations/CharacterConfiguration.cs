@@ -14,7 +14,8 @@ public class CharacterConfiguration : IEntityTypeConfiguration<Character>
     {
         builder.HasKey(c => c.Id);
         builder.Property(c => c.Id)
-            .ValueGeneratedOnAdd();
+            .ValueGeneratedOnAdd()
+            .HasColumnName("CharacterId");
 
         builder.Property(c => c.Name)
             .IsRequired()

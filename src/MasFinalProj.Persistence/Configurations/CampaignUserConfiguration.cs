@@ -16,6 +16,7 @@ public class CampaignUserConfiguration : IEntityTypeConfiguration<CampaignUser>
 
         builder.HasKey(cu => cu.Id);
         builder.Property(cu => cu.Id)
-            .ValueGeneratedOnAdd();
+            .ValueGeneratedOnAdd()
+            .HasColumnName("CampaignUserId");
     }
 }
