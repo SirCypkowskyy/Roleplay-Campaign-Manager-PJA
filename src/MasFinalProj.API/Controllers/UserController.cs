@@ -158,7 +158,7 @@ public class UserController : ControllerBase
     {
         var redirectUrl = "https://discord.com/api/oauth2/authorize?" +
                           $"client_id={_configurationOptions.DiscordClientId}&" +
-                          $"redirect_uri={_configurationOptions.DiscordRedirectUri}&" +
+                          $"redirect_uri={"http://localhost:5128/api/v1/user/auth/discord/callback"}&" +
                           $"response_type={_configurationOptions.DiscordResponseType}&" +
                           $"scope={_configurationOptions.DiscordScope}";
         
@@ -201,6 +201,25 @@ public class UserController : ControllerBase
         }
         
         var authData = await _discordAuthRepository.AuthenticateDiscordAsync(code);
+        
+        var redirectUrl = $"http://localhost:5129/dashboard";
+
+        Response.Cookies.Append("token", authData.jwtToken, new CookieOptions()
+        {
+            HttpOnly = true,
+        });
+        
+        Response.Cookies.Append("refreshToken", authData.jwtRefreshToken, new CookieOptions()
+        {
+            HttpOnly = true,
+        });
+        
+        Response.Cookies.Append("username", authData.username, new CookieOptions()
+        {
+            HttpOnly = true,
+        });
+        
+        return Redirect(redirectUrl);
         
         return Ok(new UserJwtResponseData
         {

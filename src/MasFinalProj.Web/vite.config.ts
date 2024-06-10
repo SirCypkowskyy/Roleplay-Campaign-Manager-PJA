@@ -25,7 +25,6 @@ let serverProxies: Record<string, ProxyOptions> = {
         target: backendUrl,
     },
 };
-  
 
 export default defineConfig({
     
@@ -38,5 +37,10 @@ export default defineConfig({
     server: {
         proxy: serverProxies,
       port: backendPort,
+    },
+    define: {
+        __BACKEND_URL__: JSON.stringify(backendUrl),
+        __RUN_AS_HTTPS__: JSON.stringify(runAsHttps),
+        __ASPNETCORE_ENVIRONMENT__: JSON.stringify(aspNetCore_environment),
     },
 })

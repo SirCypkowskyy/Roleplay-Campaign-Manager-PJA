@@ -27,7 +27,13 @@ export default function LoginPage(): ReactElement {
 
     const navigate = useNavigate();
     const debouncedSuccessLogin = useDebounce(successLogin, 500);
-    const { toast } = useToast();
+    const {toast} = useToast();
+    
+    const [viteBackendUrl, setViteBackendUrl] = useState('');
+    
+    useEffect(() => {
+        setViteBackendUrl(__BACKEND_URL__);
+    }, []);
 
     useEffect(() => {
         if (debouncedEmail)
@@ -91,31 +97,31 @@ export default function LoginPage(): ReactElement {
                 },
                 body: JSON.stringify({email, password})
             });
-            
+
             if (!response.ok) {
-                if(response.status >= 400 && response.status < 500) 
+                if (response.status >= 400 && response.status < 500)
                     throw new Error("Invalid email or password");
                 else
                     throw new Error("Server error");
             }
-            
+
             const convertedResponse = await response.json() as JwtResponse;
-           
+
             setSuccessLogin(true);
             toast({
                 title: "Success",
                 description: "You have successfully logged in",
                 duration: 2000
             });
-            
+
             Cookies.set("token", convertedResponse.token);
             Cookies.set("refreshToken", convertedResponse.refreshToken);
-            
+
             // navigate after 3 seconds
             setTimeout(() => {
                 navigate("/dashboard");
             }, 3000);
-            
+
         } catch (e) {
             setErrorMessage(e instanceof Error ? e.message : "An error occurred");
             setErrorLogin(true);
@@ -171,7 +177,7 @@ export default function LoginPage(): ReactElement {
                             />
                         </div>
                         {errorLogin && <div className="text-red-500 text-sm">{errorMessage}</div>}
-                        <Button type="submit" 
+                        <Button type="submit"
                                 className={cn("w-full")} disabled={!canLogin}
                                 onClick={async (e) => {
                                     console.log("submit")
@@ -180,14 +186,18 @@ export default function LoginPage(): ReactElement {
                                 }}
                         >
                             {loginLoading && <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0c-5.373 0-9.733 4.327-9.733 9.733H4z"/>
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                        strokeWidth="4"/>
+                                <path className="opacity-75" fill="currentColor"
+                                      d="M4 12a8 8 0 018-8V0c-5.373 0-9.733 4.327-9.733 9.733H4z"/>
                             </svg>}
                             Login
                         </Button>
-                        <Button variant="outline" className="w-full">
-                            Login with Discord <SiDiscord className="pl-2"/>
-                        </Button>
+                        <Link to={`${viteBackendUrl}/api/v1/user/auth/discord`}>
+                            <Button variant="outline" className="w-full">
+                                Login with Discord <SiDiscord className="pl-2"/>
+                            </Button>
+                        </Link>
                     </div>
                     <div className="mt-4 text-center text-sm">
                         Don&apos;t have an account?{" "}

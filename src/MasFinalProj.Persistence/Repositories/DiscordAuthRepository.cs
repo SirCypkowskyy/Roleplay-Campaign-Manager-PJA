@@ -58,6 +58,8 @@ public class DiscordAuthRepository : IDiscordAuthRepository
 
         userResponse.EnsureSuccessStatusCode();
 
+        Console.WriteLine(userResponseContent.ToString());
+
 
         var user = JsonSerializer.Deserialize<DiscordUser>(userResponseContent);
 
@@ -70,7 +72,7 @@ public class DiscordAuthRepository : IDiscordAuthRepository
             throw new UnauthorizedAccessException("User nie istnieje w bazie danych");
 
         dbUser.DiscordUsername = user.Username;
-        dbUser.DiscordId = user.Id;
+        dbUser.DiscordId = long.Parse(user.Id);
         await _userRepository.UpdateAsync(dbUser);
 
         var jwtData = AuthHelper.GenerateJwtToken(dbUser, _configurationOptions);
