@@ -60,6 +60,16 @@ public class Character : BaseEntity<long>
     public long? PlayerOwnerId { get; set; }
     
     /// <summary>
+    /// Kampania, w której znajduje się postać
+    /// </summary>
+    public Campaign Campaign { get; set; }
+    
+    /// <summary>
+    /// Id kampanii, w której znajduje się postać
+    /// </summary>
+    public Guid CampaignId { get; set; }
+    
+    /// <summary>
     /// Wiadomości, które postać wysłała
     /// </summary>
     public virtual ICollection<Message> Messages { get; set; } = new List<Message>();

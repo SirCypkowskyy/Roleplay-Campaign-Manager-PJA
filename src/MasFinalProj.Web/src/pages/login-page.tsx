@@ -8,6 +8,7 @@ import {SiDiscord} from "@icons-pack/react-simple-icons";
 import {useToast} from "@/components/ui/use-toast.ts";
 import {cn} from "@/lib/utils.ts";
 import {useAuth} from "@/providers/auth-provider.tsx";
+import {useAuthStore} from "@/store/auth-store.ts";
 
 export default function LoginPage(): ReactElement {
     const [email, setEmail] = useState("");
@@ -27,9 +28,11 @@ export default function LoginPage(): ReactElement {
     const navigate = useNavigate();
     const debouncedSuccessLogin = useDebounce(successLogin, 500);
     const {toast} = useToast();
-    const auth = useAuth()
+    // const auth = useAuth()
     
     const [viteBackendUrl, setViteBackendUrl] = useState('');
+    
+    const auth = useAuthStore();
     
     useEffect(() => {
         setViteBackendUrl(__BACKEND_URL__);
@@ -106,7 +109,7 @@ export default function LoginPage(): ReactElement {
             // }
             //
             // const convertedResponse = await response.json() as JwtResponse;
-            if(await auth.loginUser(email, password))
+            if(await auth.loginAsync(email, password))
             {
                 setSuccessLogin(true);
                 toast({

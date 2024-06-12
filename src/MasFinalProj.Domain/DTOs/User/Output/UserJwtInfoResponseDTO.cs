@@ -1,4 +1,4 @@
-namespace MasFinalProj.API.DTOs.User.Output;
+namespace MasFinalProj.Domain.DTOs.User.Output;
 
 /// <summary>
 /// DTO z danymi użytkownika w tokenie JWT

@@ -44,6 +44,7 @@ public static class DependencyInjection
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IDiscordAuthRepository, DiscordAuthRepository>();
+        services.AddScoped<ICampaignRepository, CampaignRepository>();
 
         return services;
     }

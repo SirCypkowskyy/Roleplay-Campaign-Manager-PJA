@@ -137,7 +137,25 @@ public class DatabaseContext : DbContext
     {
         UpdateAuditableEntities();
         
+        CheckValidatableEntities();
+        
         return await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+    }
+
+    /// <summary>
+    /// Sprawdza encje walidowalne (dziedziczące po <see cref="IValidateOnSave"/>)
+    /// </summary>
+    private void CheckValidatableEntities()
+    {
+        var entries = ChangeTracker.Entries<IValidateOnSave>()
+            .Where(x => x.State is EntityState.Added or EntityState.Modified);
+
+        foreach (var entry in entries)
+        {
+            if (entry.Entity is not { } validatableEntity) continue;
+            
+            validatableEntity.ValidateBeforeSave();
+        }
     }
 
     /// <summary>

@@ -1,3 +1,4 @@
+using MasFinalProj.Domain.DTOs.User.Output;
 using MasFinalProj.Domain.Models.Users;
 
 namespace MasFinalProj.Domain.Repositories;
@@ -63,4 +64,15 @@ public interface IUserRepository : IGenericRepository<Guid, User>
     /// Jeśli adres email lub nazwa użytkownika są już zajęte, lub jeśli email jest na czarnej liście.
     /// </exception>
     Task<User> CreateUserAsync(string email, string username, string password);
+
+    /// <summary>
+    /// Pobiera dane użytkownika do wyświetlenia na prywatnym dashboardzie.
+    /// </summary>
+    /// <param name="userId">
+    /// Id użytkownika.
+    /// </param>
+    /// <returns>
+    /// DTO z danymi do wyświetlenia na prywatnym dashboardzie użytkownika.
+    /// </returns>
+    Task<UserDashboardDataDTO> GetUserDashboardDataAsync(string userId);
 }

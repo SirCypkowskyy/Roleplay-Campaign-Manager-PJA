@@ -1,36 +1,13 @@
 import {ReactElement, useEffect, useState} from "react";
-import {
-    Activity,
-    ArrowUpRight,
-    CreditCard,
-    DollarSign,
-    Users,
-} from "lucide-react"
+import {Activity, ArrowUpRight, CreditCard, DollarSign, Users,} from "lucide-react"
 
-import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
-} from "@/components/ui/avatar"
+import {Avatar, AvatarFallback, AvatarImage,} from "@/components/ui/avatar"
 import {Badge} from "@/components/ui/badge"
 import {Button} from "@/components/ui/button"
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
+import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from "@/components/ui/card"
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table"
 import {Link, useNavigate} from "react-router-dom";
-import {useAuth} from "@/providers/auth-provider.tsx";
+import {useAuthStore} from "@/store/auth-store.ts";
 
 /**
  * Strona dashboardu
@@ -42,12 +19,10 @@ export default function DashboardPage(): ReactElement {
         code: queryParams.get("code") ?? null,
     });
     
-    const auth = useAuth();
+    // const auth = useAuth();
+    const auth = useAuthStore();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
-    const [role, setRole] = useState<string | null>(null);
-    const [username, setUsername] = useState<string | null>(null);
-    const [email, setEmail] = useState<string | null>(null);
     const [authCalledOnce, setAuthCalledOnce] = useState(false);
     
     useEffect(() => {
@@ -57,32 +32,38 @@ export default function DashboardPage(): ReactElement {
         } 
         
         if(queryObject.code) {
-            auth.retriveJwtDataFromCode(queryObject.code).then(resp => {
-                if(!resp)
-                    navigate("/")
-                console.log("Response from retriveJwtDataFromCode: ", resp);
+            auth.loginWithOAuthRetrieveCodeAsync(queryObject.code).then(() => {
                 setAuthCalledOnce(true);
-
-                auth.challenge().then((response) => {
-                    if (!response)
-                    {
+                auth.challengeAsync().then(() => {
+                    if (auth.userData?.email === undefined) {
                         // console.error("No response from challenge");
                         navigate("/");
                     }
-                    setRole(response?.role ?? null);
-                    setUsername(response?.username ?? null);
-                    setEmail(response?.email ?? null);
-                });
+                }
+                );
+            }
+            );
+        }
+        if(auth.userData === null) {
+            auth.refreshTokenAsync().then(() => {
+                setAuthCalledOnce(true);
+                auth.challengeAsync().then(() => {
+                        if (auth.userData?.email === undefined) {
+                            // console.error("No response from challenge");
+                            navigate("/");
+                        }
+                    }
+                );
             });
         }
         setIsLoading(false);
-
     }, []);
+            
 
     return (<>
         {isLoading ? <Activity/> : (
             <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-                <h1 className="text-2xl font-bold">Welcome back, {auth.lastChallenge?.username}!</h1>
+                <h1 className="text-2xl font-bold">Welcome back, {auth.userData?.username}!</h1>
                 <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
                     <Card x-chunk="dashboard-01-chunk-0">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

@@ -1,4 +1,4 @@
-namespace MasFinalProj.API.DTOs.User.Output;
+namespace MasFinalProj.Domain.DTOs.User.Output;
 
 /// <summary>
 /// Klasa reprezentująca dane odpowiedzi z JWT

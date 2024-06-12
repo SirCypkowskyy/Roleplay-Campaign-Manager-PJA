@@ -1,14 +1,20 @@
-import React, {ReactElement, useEffect} from "react";
+import {ReactElement, useEffect} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {ModeToggle} from "@/components/mode-toggle.tsx";
-import {useAuth} from "@/providers/auth-provider.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {CircleUser, Menu, Package2} from "lucide-react";
 import {Sheet, SheetContent, SheetTrigger} from "@/components/ui/sheet.tsx";
+import {useAuthStore} from "@/store/auth-store.ts";
 
 export default function Navbar(): ReactElement {
-    const auth = useAuth();
+    // const auth = useAuth();
+    const auth = useAuthStore();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        auth.challengeIfUserDataMissingAsync();
+    }, []);
+    
     return (
         // <nav className={"mx-4 sticky top-0 z-10 backdrop-filter backdrop-blur-lg bg-opacity-30 border-b border-primary-200"}>
         //     <div className="flex items-center justify-between h-16">
@@ -96,7 +102,7 @@ export default function Navbar(): ReactElement {
                         {/*/>*/}
                     </div>
                 </form>
-                {!auth.isAuthenticated() ? (
+                {!auth.isLoggedIn ? (
                     <>
                         <Link to={"/"}>
                                 Home
@@ -118,7 +124,7 @@ export default function Navbar(): ReactElement {
                                 Dashboard
                         </Link>
                         <a onClick={() => {
-                            auth.logoutUser()
+                            auth.logout()
                             navigate('/')
                         }}>
                             Logout
@@ -128,11 +134,11 @@ export default function Navbar(): ReactElement {
                 }
                 <ModeToggle className={"mt-2"}/>
                 {
-                    auth.isAuthenticated() && (
+                    auth.isLoggedIn && (
                         <div className="flex items-center gap-2">
                             <CircleUser className="h-5 w-5"/>
                             <span className="text-sm font-medium">
-                                {auth.lastChallenge?.username}
+                                {auth.userData?.username}
                             </span>
                         </div>
                     )

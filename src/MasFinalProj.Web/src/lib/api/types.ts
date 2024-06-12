@@ -3,11 +3,13 @@
  * @param id - identyfikator użytkownika
  * @param username - nazwa użytkownika
  * @param email - adres email użytkownika
- */
+ * @param role - rola użytkownika
+ * */
 export type User = {
     id: number;
     username: string;
     email: string;
+    role?: string;
 }
 
 /**
@@ -53,4 +55,46 @@ export type Message = {
     sender: string;
     character: string;
     time: string
+}
+
+/**
+ * DTO odpowiedzi z wyzwaniem autoryzacyjnym
+ * @param username - nazwa użytkownika
+ * @param email - adres email użytkownika
+ * @param role - rola użytkownika
+ */
+export type AuthChallengeResponse = {
+    username: string;
+    email: string;
+    role: string;
+}
+
+
+/**
+ * DTO odpowiedzi z danymi do wyświetlenia na dashboardzie użytkownika
+ */
+export type DashboardCampaignResponse = {
+    campaignGuid: string;
+    campaignHost: string;
+    campaignHostGuid: number;
+    campaignName: string;
+    lastMessageDate: string;
+}
+
+/**
+ * DTO odpowiedzi z danymi do wyświetlenia na dashboardzie użytkownika
+ * @param numberOfActiveCampaignsTotal - liczba aktywnych kampanii
+ * @param numberOfActiveCampaignsInLast30Days - liczba aktywnych kampanii w ciągu ostatnich 30 dni
+ * @param messagesSentTotal - liczba wysłanych wiadomości
+ * @param messagesSentInLast30Days - liczba wysłanych wiadomości w ciągu ostatnich 30 dni
+ * @param createdCharactersTotal - liczba stworzonych postaci
+ * @param activeCampaigns - lista aktywnych kampanii
+ */
+export type UserDashboardDataResponse = {
+    numberOfActiveCampaignsTotal: number;
+    numberOfActiveCampaignsInLast30Days: number;
+    messagesSentTotal: number;
+    messagesSentInLast30Days: number;
+    createdCharactersTotal: number;
+    activeCampaigns: DashboardCampaignResponse[];
 }

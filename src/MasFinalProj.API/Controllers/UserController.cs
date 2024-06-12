@@ -1,8 +1,8 @@
 using System.Security.Claims;
 using Asp.Versioning;
-using MasFinalProj.API.DTOs.User.Input;
-using MasFinalProj.API.DTOs.User.Output;
 using MasFinalProj.Domain.Abstractions.Options;
+using MasFinalProj.Domain.DTOs.User.Input;
+using MasFinalProj.Domain.DTOs.User.Output;
 using MasFinalProj.Domain.Models.Users;
 using MasFinalProj.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -287,5 +287,27 @@ public class UserController : ControllerBase
             _logger.LogError(e, "Error while creating user with email {Email}", createUserInputDto.Email);
             return BadRequest("Wystąpił nieznany błąd podczas tworzenia konta!");
         }
+    }
+
+    /// <summary>
+    /// Metoda do pobierania danych do dashboardu użytkownika
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet("dashboard")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDashboardDataDTO))]
+    public async Task<IActionResult> GetUserDashboardData()
+    {
+        var user = User;
+        var claims = user.Claims;
+        
+        _logger.LogInformation("User {Username} requested dashboard data", user.FindFirstValue(ClaimTypes.Name));
+        _logger.LogDebug("User {Username} requested dashboard data with claims: {Claims}", user.FindFirstValue(ClaimTypes.Name), claims);
+        
+        var userId = user.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new UnauthorizedAccessException("User not found");
+        
+        var userDashboardData = await _userRepository.GetUserDashboardDataAsync(userId);
+        
+        return Ok(userDashboardData);
     }
 }

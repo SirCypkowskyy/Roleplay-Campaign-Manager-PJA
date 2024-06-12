@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MasFinalProj.Persistence.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240609152117_InitialCreate")]
+    [Migration("20240612202204_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -82,7 +82,7 @@ namespace MasFinalProj.Persistence.Migrations
                         .HasMaxLength(2500)
                         .HasColumnType("nvarchar(2500)");
 
-                    b.Property<Guid?>("CampaignId")
+                    b.Property<Guid>("CampaignId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<long?>("CharacterImageId")
@@ -450,12 +450,12 @@ namespace MasFinalProj.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("0619405e-3acf-404e-af5b-eed744dc113b"),
+                            Id = new Guid("4d247e62-5966-42f3-be78-40ff86a18304"),
                             Description = "Testowy użytkownik",
                             Email = "user@s24759masfinal.com",
                             IsActive = false,
-                            PasswordHash = "Ff+xPtB7y9flBPtmo2ix/werKeyj5OMF1+9hSNTz/3A=",
-                            PasswordSalt = "rgpUmgWs6xgGRziPUblVyQ==",
+                            PasswordHash = "6a+XneCh6rTjrASzNv6eqxJ5ESMUdH4z/l0VGEieU2s=",
+                            PasswordSalt = "VSRGlNT2+p8PrYKNSnNOKw==",
                             Username = "BaseUser"
                         });
                 });
@@ -534,26 +534,26 @@ namespace MasFinalProj.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("0fd35957-0766-4d1d-bd2c-27a10e9b2b35"),
+                            Id = new Guid("edd21e0a-8193-445e-8cac-4c90f71f6549"),
                             Description = "Base admin account",
                             Email = "b.admin@s24759masfinal.com",
                             IsActive = false,
-                            PasswordHash = "/IDyCYL8bd+Z4zsE6vNX5Mq8vABbFBbSg330v7elJmo=",
-                            PasswordSalt = "UmOydnims0pHhKcULiGGOw==",
+                            PasswordHash = "GRJjOOXAq+VsXGcMkd7WuM/UVoT++Rq06+iSq/KqQD4=",
+                            PasswordSalt = "TZEWQPpM9B/0oauAX0qnrA==",
                             Username = "BaseAdmin",
-                            StaffSinceUtc = new DateTime(2024, 6, 9, 15, 21, 16, 869, DateTimeKind.Utc).AddTicks(695),
+                            StaffSinceUtc = new DateTime(2024, 6, 12, 20, 22, 4, 213, DateTimeKind.Utc).AddTicks(1094),
                             IsSuperUser = false
                         },
                         new
                         {
-                            Id = new Guid("8e68700f-ed48-4696-a1a3-24017d04135e"),
+                            Id = new Guid("c9143eb1-2c7b-4211-b070-b6948e55b707"),
                             Description = "Moje konto do testowania logowania z Discord OAuth",
                             Email = "cypkowski@gmail.com",
                             IsActive = false,
-                            PasswordHash = "/IDyCYL8bd+Z4zsE6vNX5Mq8vABbFBbSg330v7elJmo=",
-                            PasswordSalt = "UmOydnims0pHhKcULiGGOw==",
+                            PasswordHash = "GRJjOOXAq+VsXGcMkd7WuM/UVoT++Rq06+iSq/KqQD4=",
+                            PasswordSalt = "TZEWQPpM9B/0oauAX0qnrA==",
                             Username = "SirCypkowskyy",
-                            StaffSinceUtc = new DateTime(2024, 6, 9, 15, 21, 16, 869, DateTimeKind.Utc).AddTicks(725),
+                            StaffSinceUtc = new DateTime(2024, 6, 12, 20, 22, 4, 213, DateTimeKind.Utc).AddTicks(1129),
                             IsSuperUser = true
                         });
                 });
@@ -570,9 +570,11 @@ namespace MasFinalProj.Persistence.Migrations
 
             modelBuilder.Entity("MasFinalProj.Domain.Models.Campaigns.Characters.Character", b =>
                 {
-                    b.HasOne("MasFinalProj.Domain.Models.Campaigns.Campaign", null)
+                    b.HasOne("MasFinalProj.Domain.Models.Campaigns.Campaign", "Campaign")
                         .WithMany("Characters")
-                        .HasForeignKey("CampaignId");
+                        .HasForeignKey("CampaignId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("MasFinalProj.Domain.Models.Common.Image", "CharacterImage")
                         .WithMany("Characters")
@@ -583,6 +585,8 @@ namespace MasFinalProj.Persistence.Migrations
                         .WithMany("ControlledCharacters")
                         .HasForeignKey("PlayerOwnerId")
                         .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Campaign");
 
                     b.Navigation("CharacterImage");
 

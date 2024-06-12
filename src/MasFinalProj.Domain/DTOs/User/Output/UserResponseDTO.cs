@@ -1,6 +1,4 @@
-using MasFinalProj.Domain.Abstractions;
-
-namespace MasFinalProj.API.DTOs.User.Output;
+namespace MasFinalProj.Domain.DTOs.User.Output;
 
 /// <summary>
 /// DTO odpowiedzi z danymi użytkownika

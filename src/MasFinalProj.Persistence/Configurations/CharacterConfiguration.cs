@@ -48,5 +48,10 @@ public class CharacterConfiguration : IEntityTypeConfiguration<Character>
             .WithMany(i => i.Characters)
             .HasForeignKey(c => c.CharacterImageId)
             .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasOne(c => c.Campaign)
+            .WithMany(c => c.Characters)
+            .HasForeignKey(c => c.CampaignId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

@@ -1,5 +1,7 @@
 using MasFinalProj.Domain.Abstractions.Options;
+using MasFinalProj.Domain.DTOs.User.Output;
 using MasFinalProj.Domain.Helpers;
+using MasFinalProj.Domain.Models.Campaigns.Users;
 using MasFinalProj.Domain.Models.Users;
 using MasFinalProj.Domain.Models.Users.New;
 using MasFinalProj.Domain.Repositories;
@@ -174,6 +176,49 @@ public class UserRepository : GenericRepository<Guid, User>, IUserRepository
             await transaction.RollbackAsync();
             throw;
         }
+    }
+
+    /// <inheritdoc />
+    public async Task<UserDashboardDataDTO> GetUserDashboardDataAsync(string userId)
+    {
+        var userIdAsGuid = Guid.Parse(userId);
+        
+        var messagesSentTotal = await _databaseContext.Messages
+            .Include(m => m.Author)
+            .CountAsync(m => m.Author.UserId == userIdAsGuid);
+        
+        var messagesSentInLast30Days = await _databaseContext.Messages
+            .Include(m => m.Author)
+            .CountAsync(m => m.Author.UserId == userIdAsGuid && m.CreatedAtUtc > DateTime.UtcNow.AddDays(-30));
+        
+        var activeCampaigns = await _databaseContext.Campaigns
+            .Include(c => c.CampaignGameMaster).ThenInclude(campaignUserGameMaster => campaignUserGameMaster.User)
+            .Include(c => c.CampaignPlayers)
+            .Where(c => c.CampaignPlayers.Any(cp => cp.UserId == userIdAsGuid) || c.CampaignGameMaster.Any(cgm => cgm.UserId == userIdAsGuid))
+            .Select(c => new { c.Id, c.Name, c.CampaignGameMaster, c.CampaignPlayers, c.Messages.Max(c => c.CreatedAtUtc).Date })
+            .ToListAsync();
+        
+        var charactersCreatedTotal = await _databaseContext.Characters
+            .Include(c => c.PlayerOwner)
+            .Include(c => c.Campaign).ThenInclude(c => c.CampaignGameMaster)
+            .CountAsync(c => (c.PlayerOwner != null && c.PlayerOwner.UserId == userIdAsGuid) || c.Campaign.CampaignGameMaster.Any(cp => cp.UserId == userIdAsGuid));
+
+        return new UserDashboardDataDTO()
+        {
+            NumberOfActiveCampaignsTotal = activeCampaigns.Count,
+            NumberOfActiveCampaignsInLast30Days = activeCampaigns.Count(c => c.Date > DateTime.UtcNow.AddDays(-30)),
+            MessagesSentTotal = messagesSentTotal,
+            MessagesSentInLast30Days = messagesSentInLast30Days,
+            CreatedCharactersTotal = charactersCreatedTotal,
+            ActiveCampaigns = activeCampaigns.Select(c => new DashboardCampaignResponseDTO
+            {
+                CampaignGuid = c.Id.ToString(),
+                CampaignHost = c.CampaignGameMaster.First().User.Username,
+                CampaignHostGuid = c.CampaignGameMaster.First().UserId.ToString(),
+                CampaignName = c.Name,
+                LastMessageDate = DateOnly.FromDateTime(c.Date)
+            }).ToArray()
+        };
     }
 
     /// <summary>

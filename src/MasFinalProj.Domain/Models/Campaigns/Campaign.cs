@@ -10,7 +10,7 @@ namespace MasFinalProj.Domain.Models.Campaigns;
 /// <summary>
 /// Encja kampanii
 /// </summary>
-public class Campaign : BaseEntity<Guid>
+public class Campaign : BaseEntity<Guid>, IValidateOnSave
 {
     /// <summary>
     /// Nazwa kampanii
@@ -73,4 +73,14 @@ public class Campaign : BaseEntity<Guid>
     /// Notatki w ramach kampanii
     /// </summary>
     public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
+
+    /// <inheritdoc />
+    public void ValidateBeforeSave()
+    {
+        if (string.IsNullOrWhiteSpace(Name))
+            throw new ValidationException("Nazwa kampanii nie może być pusta");
+        
+        if(CampaignGameMaster.Count != 1)
+            throw new ValidationException("Kampania musi mieć dokładnie jednego mistrza gry");
+    }
 }

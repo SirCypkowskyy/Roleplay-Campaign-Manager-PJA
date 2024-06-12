@@ -1,14 +1,10 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import Cookies from 'js-cookie';
+import {AuthChallengeResponse} from "@/lib/api/types.ts";
 
 const LOGIN_API = 'api/v1/user/auth';
 const REFRESH_TOKEN_API = 'api/v1/user/auth/refresh';
 
-type AuthChallengeResponse = {
-    username: string;
-    email: string;
-    role: string;
-}
 
 interface AuthContextType {
     authToken: () => string | undefined;
