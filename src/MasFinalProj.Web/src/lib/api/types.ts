@@ -40,3 +40,17 @@ export type BadRequestResponse = {
     errors: Record<string, string[]>;
     traceId: string;
 }
+
+/**
+ * Wiadomość w czacie
+ * @param text - treść wiadomości
+ * @param sender - nadawca wiadomości
+ * @param character - avatar nadawcy
+ * @param time - czas wysłania wiadomości
+ */
+export type Message = {
+    text: string;
+    sender: string;
+    character: string;
+    time: string
+}

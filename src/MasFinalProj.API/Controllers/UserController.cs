@@ -26,6 +26,8 @@ public class UserController : ControllerBase
     private readonly ILogger<UserController> _logger;
     private readonly HttpClient _httpClient;
     
+    private static Dictionary<string, UserJwtResponseData> _tempCodeTokens = new();
+    
     /// <summary>
     /// Konstruktor kontrolera użytkownika
     /// </summary>
@@ -202,32 +204,47 @@ public class UserController : ControllerBase
         
         var authData = await _discordAuthRepository.AuthenticateDiscordAsync(code);
         
-        var redirectUrl = $"http://localhost:5129/dashboard";
+        _logger.LogInformation("User {Username} authenticated via Discord", authData.username);
 
-        Response.Cookies.Append("token", authData.jwtToken, new CookieOptions()
-        {
-            HttpOnly = true,
-        });
+        var tempCode = Guid.NewGuid().ToString().Replace("-", "")[..8];
         
-        Response.Cookies.Append("refreshToken", authData.jwtRefreshToken, new CookieOptions()
-        {
-            HttpOnly = true,
-        });
-        
-        Response.Cookies.Append("username", authData.username, new CookieOptions()
-        {
-            HttpOnly = true,
-        });
-        
-        return Redirect(redirectUrl);
-        
-        return Ok(new UserJwtResponseData
+        while (_tempCodeTokens.ContainsKey(tempCode))
+            tempCode = Guid.NewGuid().ToString().Replace("-", "")[..8];
+
+        _tempCodeTokens[tempCode] = new UserJwtResponseData()
         {
             Token = authData.jwtToken,
             RefreshToken = authData.jwtRefreshToken,
             Expires = authData.expiryDate,
             Username = authData.username
-        });
+        };
+        // TODO: Dodaj usuwanie po czasie (jeśli jest expired)
+        
+        _logger.LogInformation("Generated temp code {TempCode} for user {Username}", tempCode, authData.username);
+        _logger.LogInformation("Existing temp codes: {Codes}", _tempCodeTokens.Keys);
+        var redirectUrl = $"http://localhost:5129/dashboard?code={tempCode}";
+        
+        return Redirect(redirectUrl);
+    }
+
+    /// <summary>
+    /// Metoda do pobierania tymczasowych danych JWT z kodu
+    /// </summary>
+    /// <param name="code">
+    /// Kod do pobrania danych
+    /// </param>
+    /// <returns></returns>
+    [HttpGet("auth/discord/retrieve")]
+    [AllowAnonymous]
+    public async Task<IActionResult> RetriveTempJwtDataAsync([FromQuery] string code)
+    {
+        _logger.LogInformation("User requested temp JWT data with code {Code}", code);
+        _logger.LogInformation("Existing temp codes: {Codes}", _tempCodeTokens.Keys);
+        
+        if (_tempCodeTokens.Remove(code, out var data)) return Ok(data);
+        
+        _logger.LogWarning("Code {Code} not found", code);
+        return BadRequest("Code not found");
     }
 
     /// <summary>

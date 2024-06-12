@@ -5,10 +5,9 @@ import React, {ReactElement, useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {useDebounce} from "@uidotdev/usehooks";
 import {SiDiscord} from "@icons-pack/react-simple-icons";
-import Cookies from "js-cookie";
 import {useToast} from "@/components/ui/use-toast.ts";
 import {cn} from "@/lib/utils.ts";
-import {JwtResponse} from "@/lib/api/types.ts";
+import {useAuth} from "@/providers/auth-provider.tsx";
 
 export default function LoginPage(): ReactElement {
     const [email, setEmail] = useState("");
@@ -28,6 +27,7 @@ export default function LoginPage(): ReactElement {
     const navigate = useNavigate();
     const debouncedSuccessLogin = useDebounce(successLogin, 500);
     const {toast} = useToast();
+    const auth = useAuth()
     
     const [viteBackendUrl, setViteBackendUrl] = useState('');
     
@@ -90,37 +90,38 @@ export default function LoginPage(): ReactElement {
         setLoginLoading(true);
 
         try {
-            const response = await fetch("api/v1/user/auth", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({email, password})
-            });
-
-            if (!response.ok) {
-                if (response.status >= 400 && response.status < 500)
-                    throw new Error("Invalid email or password");
-                else
-                    throw new Error("Server error");
+            // const response = await fetch("api/v1/user/auth", {
+            //     method: "POST",
+            //     headers: {
+            //         "Content-Type": "application/json",
+            //     },
+            //     body: JSON.stringify({email, password})
+            // });
+            //
+            // if (!response.ok) {
+            //     if (response.status >= 400 && response.status < 500)
+            //         throw new Error("Invalid email or password");
+            //     else
+            //         throw new Error("Server error");
+            // }
+            //
+            // const convertedResponse = await response.json() as JwtResponse;
+            if(await auth.loginUser(email, password))
+            {
+                setSuccessLogin(true);
+                toast({
+                    title: "Success",
+                    description: "You have successfully logged in",
+                    duration: 2000
+                });
+                setTimeout(() => {
+                    navigate("/dashboard");
+                }, 3000);
+                
+                return;
             }
-
-            const convertedResponse = await response.json() as JwtResponse;
-
-            setSuccessLogin(true);
-            toast({
-                title: "Success",
-                description: "You have successfully logged in",
-                duration: 2000
-            });
-
-            Cookies.set("token", convertedResponse.token);
-            Cookies.set("refreshToken", convertedResponse.refreshToken);
-
-            // navigate after 3 seconds
-            setTimeout(() => {
-                navigate("/dashboard");
-            }, 3000);
+            
+            throw new Error("Invalid email or password");
 
         } catch (e) {
             setErrorMessage(e instanceof Error ? e.message : "An error occurred");
@@ -180,7 +181,6 @@ export default function LoginPage(): ReactElement {
                         <Button type="submit"
                                 className={cn("w-full")} disabled={!canLogin}
                                 onClick={async (e) => {
-                                    console.log("submit")
                                     e.preventDefault();
                                     await handleSubmit();
                                 }}

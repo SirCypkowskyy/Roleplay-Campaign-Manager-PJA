@@ -32,24 +32,14 @@ import {
 import {Link, useNavigate} from "react-router-dom";
 import {useAuth} from "@/providers/auth-provider.tsx";
 
-type DashboardPageOptionalQueryParams = {
-    token?: string | null;
-    username?: string | null;
-    expires?: string | null;
-    refresh_token?: string | null;
-}
-
 /**
  * Strona dashboardu
  */
 export default function DashboardPage(): ReactElement {
-    
     const queryParams = new URLSearchParams(window.location.search);
-
-    const queryObject: DashboardPageOptionalQueryParams = ({
-        token: queryParams.get("token"),
-        username: queryParams.get("username"),
-        refresh_token: queryParams.get("refresh_token"),
+    
+    const queryObject = ({
+        code: queryParams.get("code") ?? null,
     });
     
     const auth = useAuth();
@@ -58,32 +48,41 @@ export default function DashboardPage(): ReactElement {
     const [role, setRole] = useState<string | null>(null);
     const [username, setUsername] = useState<string | null>(null);
     const [email, setEmail] = useState<string | null>(null);
+    const [authCalledOnce, setAuthCalledOnce] = useState(false);
     
     useEffect(() => {
-        if(!auth) return;
-        
-        if (queryObject.token && queryObject.username && queryObject.refresh_token) {
-            auth.setAuthToken ? auth.setAuthToken(queryObject.token) : null;
-            auth.setRefreshToken ? auth.setRefreshToken(queryObject.refresh_token) : null;
-        }
-        
-        if(auth.challenge) auth.challenge().then((response) => {
-            if(!response)
-                navigate("/")
-            
-            setRole(response?.role ?? null);
-            setUsername(response?.username ?? null);
-            setEmail(response?.email ?? null);
-            
+        if (!auth || authCalledOnce) {
             setIsLoading(false);
-        });
+            return;
+        } 
         
+        if(queryObject.code) {
+            auth.retriveJwtDataFromCode(queryObject.code).then(resp => {
+                if(!resp)
+                    navigate("/")
+                console.log("Response from retriveJwtDataFromCode: ", resp);
+                setAuthCalledOnce(true);
+
+                auth.challenge().then((response) => {
+                    if (!response)
+                    {
+                        // console.error("No response from challenge");
+                        navigate("/");
+                    }
+                    setRole(response?.role ?? null);
+                    setUsername(response?.username ?? null);
+                    setEmail(response?.email ?? null);
+                });
+            });
+        }
+        setIsLoading(false);
+
     }, []);
-    
+
     return (<>
-        {isLoading ? <Activity /> : (
+        {isLoading ? <Activity/> : (
             <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-                <h1 className="text-2xl font-bold">Welcome back, {username}!</h1>
+                <h1 className="text-2xl font-bold">Welcome back, {auth.lastChallenge?.username}!</h1>
                 <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
                     <Card x-chunk="dashboard-01-chunk-0">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

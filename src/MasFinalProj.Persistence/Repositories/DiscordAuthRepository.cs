@@ -3,7 +3,9 @@ using MasFinalProj.Domain.Abstractions.Options;
 using MasFinalProj.Domain.Helpers;
 using MasFinalProj.Domain.Models.NoDbModels;
 using MasFinalProj.Domain.Models.Users;
+using MasFinalProj.Domain.Models.Users.New;
 using MasFinalProj.Domain.Repositories;
+using MasFinalProj.Persistence.Data;
 using Microsoft.Extensions.Options;
 
 namespace MasFinalProj.Persistence.Repositories;
@@ -17,14 +19,17 @@ public class DiscordAuthRepository : IDiscordAuthRepository
     private static readonly string _httpClientName = "discordClient";
     private readonly ConfigurationOptions _configurationOptions;
     private readonly IUserRepository _userRepository;
+    private readonly DatabaseContext _databaseContext;
 
     public DiscordAuthRepository(IHttpClientFactory httpClientFactory,
         IOptions<ConfigurationOptions> configurationOptions,
-        IUserRepository userRepository)
+        IUserRepository userRepository,
+        DatabaseContext databaseContext)
     {
         _configurationOptions = configurationOptions.Value;
         _httpClient = httpClientFactory.CreateClient(_httpClientName);
         _userRepository = userRepository;
+        _databaseContext = databaseContext;
     }
 
     /// <inheritdoc />
@@ -77,6 +82,15 @@ public class DiscordAuthRepository : IDiscordAuthRepository
 
         var jwtData = AuthHelper.GenerateJwtToken(dbUser, _configurationOptions);
 
+        _databaseContext.RefreshTokens.Add(new RefreshToken
+        {
+            UserId = dbUser.Id,
+            Value = jwtData.refreshToken,
+            ExpiryDateUtc = jwtData.expiryDate.ToUniversalTime()
+        });
+            
+        await _databaseContext.SaveChangesAsync();
+        
         return (jwtData.jwtToken, jwtData.refreshToken, jwtData.expiryDate, dbUser.Username);
     }
 }

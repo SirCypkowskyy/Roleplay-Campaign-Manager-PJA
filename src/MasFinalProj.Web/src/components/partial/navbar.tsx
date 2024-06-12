@@ -1,24 +1,14 @@
 import React, {ReactElement, useEffect} from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {ModeToggle} from "@/components/mode-toggle.tsx";
 import {useAuth} from "@/providers/auth-provider.tsx";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator, DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu.tsx";
 import {Button} from "@/components/ui/button.tsx";
-import {CircleUser, Menu, Package2, Search} from "lucide-react";
-import {Input} from "@/components/ui/input.tsx";
+import {CircleUser, Menu, Package2} from "lucide-react";
 import {Sheet, SheetContent, SheetTrigger} from "@/components/ui/sheet.tsx";
 
 export default function Navbar(): ReactElement {
     const auth = useAuth();
-    
-    
-    
+    const navigate = useNavigate();
     return (
         // <nav className={"mx-4 sticky top-0 z-10 backdrop-filter backdrop-blur-lg bg-opacity-30 border-b border-primary-200"}>
         //     <div className="flex items-center justify-between h-16">
@@ -44,36 +34,6 @@ export default function Navbar(): ReactElement {
                         MAS Roleplay Master
                     </span>
                 </Link>
-                {/*<Link*/}
-                {/*    to="#"*/}
-                {/*    className="text-foreground transition-colors hover:text-foreground"*/}
-                {/*>*/}
-                {/*    Dashboard*/}
-                {/*</Link>*/}
-                {/*<Link*/}
-                {/*    to="#"*/}
-                {/*    className="text-muted-foreground transition-colors hover:text-foreground"*/}
-                {/*>*/}
-                {/*    Orders*/}
-                {/*</Link>*/}
-                {/*<Link*/}
-                {/*    to="#"*/}
-                {/*    className="text-muted-foreground transition-colors hover:text-foreground"*/}
-                {/*>*/}
-                {/*    Products*/}
-                {/*</Link>*/}
-                {/*<Link*/}
-                {/*    to="#"*/}
-                {/*    className="text-muted-foreground transition-colors hover:text-foreground"*/}
-                {/*>*/}
-                {/*    Customers*/}
-                {/*</Link>*/}
-                {/*<Link*/}
-                {/*    to="#"*/}
-                {/*    className="text-muted-foreground transition-colors hover:text-foreground"*/}
-                {/*>*/}
-                {/*    Analytics*/}
-                {/*</Link>*/}
             </nav>
             <Sheet>
                 <SheetTrigger asChild>
@@ -93,7 +53,7 @@ export default function Navbar(): ReactElement {
                             className="flex items-center gap-2 text-lg font-semibold"
                         >
                             <Package2 className="h-6 w-6"/>
-                            <span className="sr-only">Acme Inc</span>
+                            <span className="sr-only">MAS Roleplay App</span>
                         </Link>
                         <Link to="#" className="hover:text-foreground">
                             Dashboard
@@ -136,19 +96,47 @@ export default function Navbar(): ReactElement {
                         {/*/>*/}
                     </div>
                 </form>
-                <Link to={"/"}>
-                    Home
-                </Link>
-                <Link to={"/about"}>
-                    About
-                </Link>
-                <Link to={"/login"}>
-                    Login
-                </Link>
-                <Link to={"/register"}>
-                    Register
-                </Link>
+                {!auth.isAuthenticated() ? (
+                    <>
+                        <Link to={"/"}>
+                                Home
+                        </Link>
+                        <Link to={"/about"}>
+                                About
+                        </Link>
+                        <Link to={"/login"}>
+                                Login
+                        </Link>
+                        <Link to={"/register"}>
+                                Register
+                        </Link>
+                    </>
+                ) : (
+                    <>
+
+                        <Link to={"/dashboard"}>
+                                Dashboard
+                        </Link>
+                        <a onClick={() => {
+                            auth.logoutUser()
+                            navigate('/')
+                        }}>
+                            Logout
+                        </a>
+                    </>
+                )
+                }
                 <ModeToggle className={"mt-2"}/>
+                {
+                    auth.isAuthenticated() && (
+                        <div className="flex items-center gap-2">
+                            <CircleUser className="h-5 w-5"/>
+                            <span className="text-sm font-medium">
+                                {auth.lastChallenge?.username}
+                            </span>
+                        </div>
+                    )
+                }
                 {/*<DropdownMenu>*/}
                 {/*    <DropdownMenuTrigger asChild>*/}
                 {/*        <Button variant="secondary" size="icon" className="rounded-full">*/}

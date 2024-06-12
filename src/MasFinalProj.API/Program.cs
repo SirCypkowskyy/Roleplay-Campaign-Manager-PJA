@@ -43,6 +43,7 @@ public class Program
                 opts.ClaimsIssuer = configurationOptions.JwtIssuer;
                 opts.RequireHttpsMetadata = false;
                 opts.SaveToken = true;
+                opts.UseSecurityTokenValidators = true;
                 opts.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
@@ -80,7 +81,7 @@ public class Program
                 In = ParameterLocation.Header,
                 Name = "Authorization",
                 Type = SecuritySchemeType.ApiKey,
-                Description = "Wprowadź token JWT w formacie `Bearer {token}`"
+                Description = "Wprowadź token JWT w formacie `Bearer {token}",
             });
             
             opts.AddSecurityRequirement(new OpenApiSecurityRequirement

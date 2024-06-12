@@ -10,6 +10,7 @@ import {ThemeProvider} from "@/providers/theme-provider.tsx";
 import DashboardPage from "@/pages/dashboard-page.tsx";
 import {AuthProvider} from "@/providers/auth-provider.tsx";
 import RegisterPage from "@/pages/register-page.tsx";
+import ChatPage from "@/pages/chat-page.tsx";
 
 const router = createBrowserRouter([
     {
@@ -21,6 +22,11 @@ const router = createBrowserRouter([
             {path: '/login', element: <LoginPage/>},
             {path: '/register', element: <RegisterPage/>},
             {path: '/dashboard', element: <DashboardPage/>},
+            {path: '/profile', element: <div>Profile</div>},
+            {
+                path: '/chat/:chatId', 
+                element: <ChatPage/>,
+            },
         ],
     }
 ]);
