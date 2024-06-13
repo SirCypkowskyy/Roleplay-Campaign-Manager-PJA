@@ -82,6 +82,6 @@ public static class AuthHelper
         var randomNumber = new byte[32];
         using (var rng = RandomNumberGenerator.Create())
             rng.GetBytes(randomNumber);
-        return Convert.ToBase64String(randomNumber);
+        return Convert.ToBase64String(randomNumber).Replace('+', 'a').Replace('/', 'B').Replace('=', 'c').Replace(" ", "d");
     }
 }

@@ -15,7 +15,7 @@ const appLogLevel = siteConfig.logLevel;
  * @param args argumenty do zalogowania
  */
 export function myLog(log: LogLevel = LogLevel.info, ...args: any[]) {
-    const origin = new Error().stack?.split('\n')[2].trim();
+    const origin = "MasFinalProj.Web";
     switch (appLogLevel) {
         case LogLevel.silent:
             break;

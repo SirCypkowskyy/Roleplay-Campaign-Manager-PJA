@@ -23,7 +23,7 @@ let serverProxies: Record<string, ProxyOptions> = {
     },
     "/swagger": {
         target: backendUrl,
-    },
+    }
 };
 
 export default defineConfig({

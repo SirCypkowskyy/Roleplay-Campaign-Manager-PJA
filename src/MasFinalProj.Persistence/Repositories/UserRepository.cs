@@ -89,18 +89,21 @@ public class UserRepository : GenericRepository<Guid, User>, IUserRepository
     }
 
     /// <inheritdoc />
-    public async Task<(string jwtToken, string jwtRefreshToken, DateTime expiryDate, string username)> RefreshTokenAsync(string username, string refreshToken)
+    public async Task<(string jwtToken, string jwtRefreshToken, DateTime expiryDate, string username)> RefreshTokenAsync(string refreshToken)
     {
         var transaction = await _databaseContext.Database.BeginTransactionAsync();
         
         try
         {
-            var user = await _databaseContext.Users
-                .FirstOrDefaultAsync(u => u.Username == username);
+            var user = await _databaseContext.RefreshTokens
+                .Include(rt => rt.User)
+                .Where(rt => rt.Value == refreshToken)
+                .Select(rt => rt.User)
+                .FirstOrDefaultAsync();
             
             if (user is null)
             {
-                _logger.LogWarning("User with username {Username} not found", username);
+                _logger.LogWarning("User with refresh token {RefreshToken} not found", refreshToken);
                 throw new UnauthorizedAccessException("User not found");
             }
 
@@ -138,7 +141,7 @@ public class UserRepository : GenericRepository<Guid, User>, IUserRepository
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error while refreshing token for user with username {Username}", username);
+            _logger.LogError(e, "Error while refreshing token for user with refresh token {RefreshToken}", refreshToken);
             await transaction.RollbackAsync();
             throw;
         }

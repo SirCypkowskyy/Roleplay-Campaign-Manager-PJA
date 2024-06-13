@@ -26,13 +26,14 @@ export const useAuthStore = create(
             authorizeAsync: async () => {
                 const token = Cookies.get('token');
                 const refreshToken = Cookies.get('refreshToken');
-                const email = Cookies.get('email');
-                if (!token || !refreshToken || !email) {
+                if (!token || !refreshToken) {
+                    myLog(LogLevel.debug, '[AuthStore/authorizeAsync] No token or refreshToken, so cannot authorize')
                     set({isLoggedIn: false});
                     return;
                 }
-                const response = await Endpoints.User.REFRESH_TOKEN_API(refreshToken, email);
+                const response = await Endpoints.User.REFRESH_TOKEN_API(refreshToken);
                 if (!response.isSuccess) {
+                    myLog(LogLevel.debug, '[AuthStore/authorizeAsync] Refresh token failed')
                     set({isLoggedIn: false});
                     return;
                 }
@@ -43,6 +44,7 @@ export const useAuthStore = create(
             loginAsync: async (email: string, password: string) => {
                 const response = await Endpoints.User.LOGIN_API(email, password);
                 if (!response.isSuccess) {
+                    myLog(LogLevel.debug, '[AuthStore/loginAsync] Login failed');
                     set({isLoggedIn: false});
                     return false;
                 }
@@ -55,6 +57,7 @@ export const useAuthStore = create(
             loginWithOAuthRetrieveCodeAsync: async (code: string) => {
                 const response = await Endpoints.User.LOGIN_WITH_OAUTH_RETRIEVE_CODE_API(code);
                 if (!response.isSuccess) {
+                    myLog(LogLevel.debug, '[AuthStore/loginWithOAuthRetrieveCodeAsync] Login failed');
                     set({isLoggedIn: false});
                     return false;
                 }
@@ -67,18 +70,20 @@ export const useAuthStore = create(
                 Cookies.remove('token');
                 Cookies.remove('refreshToken');
                 Cookies.remove('email');
+                myLog(LogLevel.debug, '[AuthStore/logout] Logged out')
                 set({isLoggedIn: false});
             },
             refreshTokenAsync: async () => {
                 myLog(LogLevel.debug, '[AuthStore/refreshTokenAsync] Refreshing token');
                 const refreshToken = Cookies.get('refreshToken');
-                const email = Cookies.get('email');
-                if (!refreshToken || !email) {
+                if (!refreshToken) {
+                    myLog(LogLevel.error, '[AuthStore/refreshTokenAsync] No refreshToken, so cannot refresh');
                     set({isLoggedIn: false});
                     return;
                 }
-                const response = await Endpoints.User.REFRESH_TOKEN_API(refreshToken, email);
+                const response = await Endpoints.User.REFRESH_TOKEN_API(refreshToken);
                 if (!response.isSuccess) {
+                    myLog(LogLevel.error, '[AuthStore/refreshTokenAsync] Refresh token failed');
                     set({isLoggedIn: false});
                     return;
                 }

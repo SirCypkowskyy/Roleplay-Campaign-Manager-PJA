@@ -34,13 +34,10 @@ public interface IUserRepository : IGenericRepository<Guid, User>
     /// <param name="refreshToken">
     /// Token odświeżający.
     /// </param>
-    /// <param name="username">
-    /// Nazwa użytkownika.
-    /// </param>
     /// <returns>
     /// JWT token, JWT refresh token, data wygaśnięcia tokenu oraz nazwa użytkownika.
     /// </returns>
-    Task<(string jwtToken, string jwtRefreshToken, DateTime expiryDate, string username)> RefreshTokenAsync(string username, string refreshToken);
+    Task<(string jwtToken, string jwtRefreshToken, DateTime expiryDate, string username)> RefreshTokenAsync(string refreshToken);
 
     /// <summary>
     /// Tworzy nowego użytkownika.

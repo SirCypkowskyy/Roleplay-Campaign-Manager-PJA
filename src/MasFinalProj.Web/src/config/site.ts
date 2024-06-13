@@ -19,7 +19,7 @@ export const siteConfig = {
     authorWebsite: "https://cg-personal.vercel.app/",
     description: "Roleplay Master is a platform for roleplayers to connect, collaborate, and create amazing roleplay experiences together.",
     keywords: "roleplay, roleplay master, roleplay platform, roleplay community, roleplay collaboration, roleplay creation",
-    logLevel: "info" as LogLevel
+    logLevel: "debug" as LogLevel,
 }
 
 export type SiteConfig = typeof siteConfig

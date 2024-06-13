@@ -2,7 +2,9 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using Asp.Versioning;
+using MasFinalProj.API.Hubs;
 using MasFinalProj.Domain.Abstractions.Options;
+using MasFinalProj.Domain.Models.NoDbModels;
 using MasFinalProj.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -26,12 +28,13 @@ public class Program
         builder.Configuration.Bind(configurationOptions);
 
         builder.Services.AddPersistence();
-        
+
         builder.Services.AddControllers()
             .AddJsonOptions(opts =>
             {
                 // opts.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             });
+        builder.Services.AddSignalR();
 
         builder.Services.AddAuthentication(options =>
         {
@@ -128,20 +131,34 @@ public class Program
         {
             if (builder.Environment.IsDevelopment())
             {
+                // opts.AddDefaultPolicy(policy =>
+                // {
+                //     policy.AllowAnyOrigin();
+                //
+                //     policy.AllowAnyHeader();
+                //     policy.AllowAnyMethod();
+                //     // policy.AllowCredentials();
+                // });
+                
                 opts.AddDefaultPolicy(policy =>
                 {
+                    policy.WithOrigins(configurationOptions.AllowedOrigins);
+                
                     policy.AllowAnyHeader();
                     policy.AllowAnyMethod();
-                    policy.AllowAnyOrigin();
+                    policy.AllowCredentials();
                 });
+                
                 return;
             }
 
             opts.AddDefaultPolicy(policy =>
             {
                 policy.WithOrigins(configurationOptions.AllowedOrigins);
+                
                 policy.AllowAnyHeader();
                 policy.AllowAnyMethod();
+                policy.AllowCredentials();
             });
         });
 
@@ -165,8 +182,11 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.MapControllers();
+        app.UseCors();
+        app.MapHub<CampaignChatHub>("/api/hubs/campaign");
 
+        app.MapControllers();
+      
         app.Run();
     }
 }

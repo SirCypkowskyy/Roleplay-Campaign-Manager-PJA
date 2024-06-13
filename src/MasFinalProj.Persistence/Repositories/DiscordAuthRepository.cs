@@ -59,11 +59,9 @@ public class DiscordAuthRepository : IDiscordAuthRepository
 
         var userResponse = await _httpClient.SendAsync(request);
         var userResponseContent = await userResponse.Content.ReadAsStringAsync();
-        Console.WriteLine(userResponseContent);
 
         userResponse.EnsureSuccessStatusCode();
 
-        Console.WriteLine(userResponseContent.ToString());
 
 
         var user = JsonSerializer.Deserialize<DiscordUser>(userResponseContent);

@@ -10,6 +10,5 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="public\img\" />
-    <Folder Include="src\service\" />
   </ItemGroup>
 </Project>

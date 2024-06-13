@@ -95,6 +95,11 @@ public class UserController : ControllerBase
             return BadRequest("Wystąpił nieznany błąd podczas autoryzacji!");
         }
     }
+
+    public class RefreshTokenObj
+    {
+        public string RefreshToken { get; set; }
+    }
     
     /// <summary>
     /// Metoda do odświeżania tokena JWT
@@ -102,13 +107,16 @@ public class UserController : ControllerBase
     /// <param name="refreshToken">
     /// Token odświeżający
     /// </param>
+    /// <param name="email">
+    /// Email użytkownika
+    /// </param>
     /// <returns></returns>
-    [HttpGet("auth/refresh")]
-    public async Task<IActionResult> RefreshTokenAsync([FromQuery] string refreshToken, [FromQuery] string username)
+    [HttpPost("auth/refresh")]
+    public async Task<IActionResult> RefreshTokenAsync([FromBody] RefreshTokenObj refreshToken)
     {
         try
         {
-            var dbResponse = await _userRepository.RefreshTokenAsync(username, refreshToken);
+            var dbResponse = await _userRepository.RefreshTokenAsync(refreshToken.RefreshToken);
             return Ok(new UserJwtResponseData
             {
                 Token = dbResponse.jwtToken,

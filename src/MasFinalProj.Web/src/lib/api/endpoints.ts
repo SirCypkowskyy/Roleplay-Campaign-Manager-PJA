@@ -17,7 +17,7 @@ export const Endpoints = {
          */
         LOGIN_API: async (email: string, password: string): Promise<ApiResponse<JwtResponse>> => {
             myLog(LogLevel.debug, '[User.LoginApi] Called for login')
-            const response = await fetch('api/v1/user/auth', {
+            const response = await fetch('/api/v1/user/auth', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -44,15 +44,15 @@ export const Endpoints = {
         /**
          * @description Endpoint dla odświeżania tokena JWT
          * @param refreshToken - token odświeżający
-         * @param email - email użytkownika
          */
-        REFRESH_TOKEN_API: async (refreshToken: string, email: string): Promise<ApiResponse<JwtResponse>> => {
+        REFRESH_TOKEN_API: async (refreshToken: string): Promise<ApiResponse<JwtResponse>> => {
             myLog(LogLevel.debug, '[User.RefreshTokenApi] Called for token refresh')
-            const response = await fetch(`api/v1/user/auth/refresh?refreshToken=${refreshToken}&email=${email}`, {
-                method: 'GET',
+            const response = await fetch(`/api/v1/user/auth/refresh`, {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                body: JSON.stringify({refreshToken})
             });
 
             if (!response.ok)
@@ -83,7 +83,7 @@ export const Endpoints = {
          */
         CHALLENGE_API: async (bearerToken: string): Promise<ApiResponse<AuthChallengeResponse>> => {
             myLog(LogLevel.debug, '[User.ChallengeApi] Called for challenge')
-            const response = await fetch('api/v1/user/auth/self', {
+            const response = await fetch('/api/v1/user/auth/self', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ export const Endpoints = {
          * @param code - kod OAuth
          */
         LOGIN_WITH_OAUTH_RETRIEVE_CODE_API: async (code: string): Promise<ApiResponse<JwtResponse>> => {
-            const response = await fetch('api/v1/user/auth/discord/retrieve?code=' + code, {
+            const response = await fetch('/api/v1/user/auth/discord/retrieve?code=' + code, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -132,7 +132,7 @@ export const Endpoints = {
             }
         },
         RETRIEVE_USER_DASHBOARD_DATA : async (bearerToken: string): Promise<ApiResponse<UserDashboardDataResponse>> => {
-            const response = await fetch('api/v1/user/dashboard', {
+            const response = await fetch('/api/v1/user/dashboard', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

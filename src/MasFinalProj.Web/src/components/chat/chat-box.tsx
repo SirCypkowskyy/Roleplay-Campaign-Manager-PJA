@@ -1,9 +1,8 @@
-import {Message} from "@/lib/api/types.ts";
 import ChatMessage from "@/components/chat/chat-message.tsx";
 
 
 interface ChatBoxProps {
-    messages: Message[];
+    messages: string[];
 }
 
 function ChatBox({ messages }: ChatBoxProps) {

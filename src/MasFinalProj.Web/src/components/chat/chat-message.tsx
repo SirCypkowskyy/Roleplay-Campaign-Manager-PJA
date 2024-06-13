@@ -1,18 +1,16 @@
-import {Message} from "@/lib/api/types.ts";
 
 interface ChatMessageProps {
-    message: Message;
+    message: string;
 }
 
 function ChatMessage({ message }: ChatMessageProps) {
-    const formattedTime = message.time.split(':').slice(0, 2).join(':');
+    const formattedTime = new Date().toLocaleTimeString();
     return (
-        <div className={`p-2 rounded ${message.sender === 'user' ? 'text-right' : 'text-left'}`}>
+        <div className={`p-2 rounded ${message === 'user' ? 'text-right' : 'text-left'}`}>
             <span className="text-sm text-gray-500">{formattedTime}
                 &nbsp;
             </span>
-            <span className="text-lg">{message.character}</span>
-            {message.text}
+            <span className="text-lg">{message}</span>
         </div>
     );
 }

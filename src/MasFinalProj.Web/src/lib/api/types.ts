@@ -98,3 +98,15 @@ export type UserDashboardDataResponse = {
     createdCharactersTotal: number;
     activeCampaigns: DashboardCampaignResponse[];
 }
+
+/**
+ * Format odpowiedzi z SignalR
+ * @param type - typ wiadomości
+ * @param target - cel wiadomości
+ * @param arguments - argumenty wiadomości
+ */
+export type SignalRResponseMessage = {
+    type: number;
+    target: string;
+    arguments: any[];
+}
