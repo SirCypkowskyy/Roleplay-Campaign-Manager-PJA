@@ -57,6 +57,21 @@ public class Program
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configurationOptions.JwtSecret)),
                     ValidateIssuerSigningKey = true
                 };
+
+                opts.Events = new JwtBearerEvents()
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var jwtToken = context.Request.Cookies["token"];
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(jwtToken) && path.StartsWithSegments("/api/hubs"))
+                        {
+                            context.Token = jwtToken;
+                        }
+                        
+                        return Task.CompletedTask;
+                    }
+                };
             });
 
         builder.Services.AddAuthorization();
@@ -129,29 +144,6 @@ public class Program
 
         builder.Services.AddCors(opts =>
         {
-            if (builder.Environment.IsDevelopment())
-            {
-                // opts.AddDefaultPolicy(policy =>
-                // {
-                //     policy.AllowAnyOrigin();
-                //
-                //     policy.AllowAnyHeader();
-                //     policy.AllowAnyMethod();
-                //     // policy.AllowCredentials();
-                // });
-                
-                opts.AddDefaultPolicy(policy =>
-                {
-                    policy.WithOrigins(configurationOptions.AllowedOrigins);
-                
-                    policy.AllowAnyHeader();
-                    policy.AllowAnyMethod();
-                    policy.AllowCredentials();
-                });
-                
-                return;
-            }
-
             opts.AddDefaultPolicy(policy =>
             {
                 policy.WithOrigins(configurationOptions.AllowedOrigins);

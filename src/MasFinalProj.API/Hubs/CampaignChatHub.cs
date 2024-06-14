@@ -1,6 +1,9 @@
+using System.IdentityModel.Tokens.Jwt;
+using MasFinalProj.Domain.Models.Users;
 using MasFinalProj.Persistence.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 
 namespace MasFinalProj.API.Hubs;
 
@@ -23,9 +26,27 @@ public class CampaignChatHub : Hub
     public override async Task OnConnectedAsync()
     {
         _logger.LogInformation("User connected: {ConnectionId}", Context.ConnectionId);
-        // _connections.Add(Context.UserIdentifier, Context.ConnectionId);
         
-        await NewMessage($"{Context.UserIdentifier} joined the chat", "Server", "");
+        var token = Context.GetHttpContext().Request.Cookies["token"];
+        
+        var user = await GetUserWithJwtToken(token);
+        if (user is null)
+        {
+            _logger.LogWarning("User not found");
+            return;
+        }
+        
+        _logger.LogInformation("User found: {UserId}", user.Id);
+        
+        
+        await NewMessage($"{user.Username} joined the chat", "System", "");
+    }
+
+    private async Task<User?> GetUserWithJwtToken(string token)
+    {
+        var decodedToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
+        var userId = decodedToken.Claims.First(c => c.Type == "uid").Value;
+        return await _dbContext.Users.FirstOrDefaultAsync(u => u.Id.ToString() == userId);
     }
     
     /// <summary>
@@ -61,6 +82,15 @@ public class CampaignChatHub : Hub
     /// <param name="character"></param>
     public async Task SendMessage(string text, string character)
     {
-        await NewMessage(text, Context.UserIdentifier, character);
+        var token = Context.GetHttpContext().Request.Cookies["token"];
+        
+        var user = await GetUserWithJwtToken(token);
+        if (user is null)
+        {
+            _logger.LogWarning("User not found");
+            return;
+        }
+        
+        await NewMessage(text, user.Username, character);
     }
 }

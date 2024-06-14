@@ -2,12 +2,20 @@ import {ReactElement} from "react";
 import {cn} from "@/lib/utils.ts";
 import {Button} from "@/components/ui/button.tsx";
 import {Link} from "react-router-dom";
+import {TypewriterEffect} from "@/components/ui/typewriter-effect.tsx";
 
 type HeroSectionProps = {
     className?: string;
 }
 
 export function HeroSection(props: HeroSectionProps): ReactElement {
+    const words = "Create and manage your roleplaying adventures with ease. Add your players, write your stories, and let the adventure begin."
+        .split(" ").map((word) => {
+            return {
+                text: word,
+            };
+        });
+    
     return (
         <div className={cn(props.className)}>
             {/* Hero center vert and horizontally */}
@@ -25,8 +33,7 @@ export function HeroSection(props: HeroSectionProps): ReactElement {
                             {/* End Title */}
                             <div className="mt-5 max-w-3xl">
                                 <p className="text-xl text-muted-foreground">
-                                    Create and manage your roleplaying adventures with ease. Add your players, write your
-                                    stories, and let the adventure begin.
+                                   <TypewriterEffect words={words} />
                                 </p>
                             </div>
                             {/* Buttons */}

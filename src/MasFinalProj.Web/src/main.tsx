@@ -10,7 +10,6 @@ import DashboardPage from "@/pages/dashboard-page.tsx";
 import RegisterPage from "@/pages/register-page.tsx";
 import ChatPage from "@/pages/chat-page.tsx";
 import ProtectedRoute from "@/redirects/protected-route.tsx";
-import CampaignPage from "@/pages/campaign-page.tsx";
 
 const router = createBrowserRouter([
     {
@@ -26,7 +25,7 @@ const router = createBrowserRouter([
                 children: [
                     {path: '/dashboard', element: <DashboardPage/>},
                     {path: '/profile', element: <div>Profile</div>},
-                    {path: '/campaign/chat', element: <ChatPage />},
+                    {path: '/campaign/:campaignId/chat', element: <ChatPage />},
                 ]
             },
 

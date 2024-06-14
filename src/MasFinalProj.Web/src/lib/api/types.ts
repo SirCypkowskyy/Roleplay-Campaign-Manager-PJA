@@ -110,3 +110,21 @@ export type SignalRResponseMessage = {
     target: string;
     arguments: any[];
 }
+
+/**
+ * Typ argumentów wiadomości otrzymanej z SignalR
+ * @param message - treść wiadomości
+ * @param author - autor wiadomości
+ * @param character - avatar autora
+ * @param authorAppRole - rola autora
+ * @param authorCampaignRole - rola autora w kampanii
+ * @param avatarResourceId - identyfikator zasobu avatara
+ */
+export type SignalRChatMessageReceivedArgumentsType = {
+    message: string;
+    author?: string;
+    character?: string;
+    authorAppRole?: string;
+    authorCampaignRole?: string;
+    avatarResourceId?: number;
+}

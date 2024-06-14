@@ -1,17 +1,23 @@
 import ChatMessage from "@/components/chat/chat-message.tsx";
-
+import { SignalRResponseMessage } from "@/lib/api/types.ts";
+import {cn} from "@/lib/utils.ts";
 
 interface ChatBoxProps {
-    messages: string[];
+    messages: SignalRResponseMessage[];
+    className?: string;
 }
 
-function ChatBox({ messages }: ChatBoxProps) {
+function ChatBox({ messages, className }: ChatBoxProps) {
+
     return (
-        <div className="p-4 h-96 overflow-y-auto">
+        <main className={cn(
+            "overflow-y-auto p-6",
+            className
+        )}>
             {messages.map((message, index) => (
-                <ChatMessage key={index} message={message} />
+                <ChatMessage key={index} message={message}/>
             ))}
-        </div>
+        </main>
     );
 }
 

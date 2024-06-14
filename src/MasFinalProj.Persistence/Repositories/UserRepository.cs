@@ -95,15 +95,17 @@ public class UserRepository : GenericRepository<Guid, User>, IUserRepository
         
         try
         {
-            var user = await _databaseContext.RefreshTokens
+            var token = await _databaseContext.RefreshTokens
                 .Include(rt => rt.User)
                 .Where(rt => rt.Value == refreshToken)
-                .Select(rt => rt.User)
                 .FirstOrDefaultAsync();
+            
+            var user = token?.User;
             
             if (user is null)
             {
                 _logger.LogWarning("User with refresh token {RefreshToken} not found", refreshToken);
+                
                 throw new UnauthorizedAccessException("User not found");
             }
 
