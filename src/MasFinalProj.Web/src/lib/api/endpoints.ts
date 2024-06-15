@@ -1,4 +1,4 @@
-import {AuthChallengeResponse, JwtResponse, UserDashboardDataResponse} from "@/lib/api/types.ts";
+import {AuthChallengeResponse, JwtResponse, User, UserDashboardDataResponse} from "@/lib/api/types.ts";
 import {myLog} from "@/lib/utils.ts";
 import {ApiResponse, LogLevel} from "@/shared/types.ts";
 
@@ -69,13 +69,6 @@ export const Endpoints = {
                 statusCode: response.status,
                 data: data as JwtResponse,
             }
-        },
-        /**
-         * @description Endpoint dla rejestracji użytkownika
-         */
-        REGISTER_API: async () => {
-            throw new Error('Not implemented');
-            // 'api/v1/user/register'
         },
         /**
          * @description Endpoint dla challenge'owania użytkownika z tokenem JWT
@@ -153,7 +146,34 @@ export const Endpoints = {
                 statusCode: response.status,
                 data: data as UserDashboardDataResponse,
             }
-        }
+        },
+        REGISTER_API: async (username: string, email: string, password: string): Promise<ApiResponse<User>> => {
+            myLog(LogLevel.debug, '[User.RegisterApi] Called for registration')
+            const response = await fetch('/api/v1/user/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, email, password })
+            });
+
+            if (!response.ok) {
+                return {
+                    isSuccess: false,
+                    statusCode: response.status,
+                    errorMessage: response.statusText,
+                    errorDetails: await response.text(),
+                }
+            }
+
+            myLog(LogLevel.debug, 'Registration success:', response);
+            const data = await response.json();
+            return {
+                isSuccess: true,
+                statusCode: response.status,
+                data: data as User,
+            }
+        },
     }
 }
 

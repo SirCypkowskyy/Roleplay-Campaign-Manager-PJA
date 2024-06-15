@@ -48,8 +48,8 @@ public static class AuthHelper
     {
         var role = user switch
         {
-            not null when user is Moderator => "Moderator",
             not null when user is Admin => "Admin",
+            not null when user is Moderator => "Moderator",
             _ => "User"
         };
         

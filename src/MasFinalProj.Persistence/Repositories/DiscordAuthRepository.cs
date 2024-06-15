@@ -6,6 +6,7 @@ using MasFinalProj.Domain.Models.Users;
 using MasFinalProj.Domain.Models.Users.New;
 using MasFinalProj.Domain.Repositories;
 using MasFinalProj.Persistence.Data;
+using MasFinalProj.Persistence.Exceptions;
 using Microsoft.Extensions.Options;
 
 namespace MasFinalProj.Persistence.Repositories;
@@ -63,7 +64,6 @@ public class DiscordAuthRepository : IDiscordAuthRepository
         userResponse.EnsureSuccessStatusCode();
 
 
-
         var user = JsonSerializer.Deserialize<DiscordUser>(userResponseContent);
 
         if (user is null)
@@ -72,7 +72,10 @@ public class DiscordAuthRepository : IDiscordAuthRepository
         var dbUser = await _userRepository.FirstOrDefaultAsync(x => x.Email == user.Email);
 
         if (dbUser is null)
-            throw new UnauthorizedAccessException("User nie istnieje w bazie danych");
+        {
+            throw new NoAccountException(user.Email, user.Username);
+            // throw new UnauthorizedAccessException("User nie istnieje w bazie danych");
+        }
 
         dbUser.DiscordUsername = user.Username;
         dbUser.DiscordId = long.Parse(user.Id);

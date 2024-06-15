@@ -5,6 +5,7 @@ using MasFinalProj.Domain.DTOs.User.Input;
 using MasFinalProj.Domain.DTOs.User.Output;
 using MasFinalProj.Domain.Models.Users;
 using MasFinalProj.Domain.Repositories;
+using MasFinalProj.Persistence.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -26,7 +27,7 @@ public class UserController : ControllerBase
     private readonly ILogger<UserController> _logger;
     private readonly HttpClient _httpClient;
     
-    private static Dictionary<string, UserJwtResponseData> _tempCodeTokens = new();
+    private static readonly Dictionary<string, UserJwtResponseData> _tempCodeTokens = new();
     
     /// <summary>
     /// Konstruktor kontrolera użytkownika
@@ -188,51 +189,70 @@ public class UserController : ControllerBase
     [SwaggerIgnore]
     public async Task<IActionResult> AuthenticateDiscordCallbackAsync()
     {
-        var queryParameters = Request.Query;
-        
-        if (queryParameters.ContainsKey("error"))
+        try
         {
-            _logger.LogWarning("Discord API returned error: {Error}", queryParameters["error"]);
-            return BadRequest("Discord API returned error");
-        }
+            var queryParameters = Request.Query;
         
-        if (!queryParameters.ContainsKey("code"))
-        {
-            _logger.LogWarning("Discord API did not return code");
-            return BadRequest("Discord API did not return code");
-        }
+            if (queryParameters.ContainsKey("error"))
+            {
+                _logger.LogWarning("Discord API returned error: {Error}", queryParameters["error"]);
+                return BadRequest("Discord API returned error");
+            }
         
-        var code = queryParameters["code"];
+            if (!queryParameters.ContainsKey("code"))
+            {
+                _logger.LogWarning("Discord API did not return code");
+                return BadRequest("Discord API did not return code");
+            }
+        
+            var code = queryParameters["code"];
 
-        if (string.IsNullOrWhiteSpace(code))
-        {
-            _logger.LogWarning("Discord API returned empty code");
-            return BadRequest("Discord API returned empty code");
+            if (string.IsNullOrWhiteSpace(code))
+            {
+                _logger.LogWarning("Discord API returned empty code");
+                return BadRequest("Discord API returned empty code");
+            }
+
+            var authData = await _discordAuthRepository.AuthenticateDiscordAsync(code);
+        
+            _logger.LogInformation("User {Username} authenticated via Discord", authData.username);
+
+            var tempCode = Guid.NewGuid().ToString().Replace("-", "")[..8];
+        
+            while (_tempCodeTokens.ContainsKey(tempCode))
+                tempCode = Guid.NewGuid().ToString().Replace("-", "")[..8];
+
+            _tempCodeTokens[tempCode] = new UserJwtResponseData()
+            {
+                Token = authData.jwtToken,
+                RefreshToken = authData.jwtRefreshToken,
+                Expires = authData.expiryDate,
+                Username = authData.username
+            };
+            // TODO: Dodaj usuwanie po czasie (jeśli jest expired)
+        
+            _logger.LogInformation("Generated temp code {TempCode} for user {Username}", tempCode, authData.username);
+            _logger.LogInformation("Existing temp codes: {Codes}", _tempCodeTokens.Keys);
+            var redirectUrl = $"http://localhost:5129/dashboard?code={tempCode}";
+        
+            return Redirect(redirectUrl);
         }
-        
-        var authData = await _discordAuthRepository.AuthenticateDiscordAsync(code);
-        
-        _logger.LogInformation("User {Username} authenticated via Discord", authData.username);
-
-        var tempCode = Guid.NewGuid().ToString().Replace("-", "")[..8];
-        
-        while (_tempCodeTokens.ContainsKey(tempCode))
-            tempCode = Guid.NewGuid().ToString().Replace("-", "")[..8];
-
-        _tempCodeTokens[tempCode] = new UserJwtResponseData()
+        catch(NoAccountException e)
         {
-            Token = authData.jwtToken,
-            RefreshToken = authData.jwtRefreshToken,
-            Expires = authData.expiryDate,
-            Username = authData.username
-        };
-        // TODO: Dodaj usuwanie po czasie (jeśli jest expired)
-        
-        _logger.LogInformation("Generated temp code {TempCode} for user {Username}", tempCode, authData.username);
-        _logger.LogInformation("Existing temp codes: {Codes}", _tempCodeTokens.Keys);
-        var redirectUrl = $"http://localhost:5129/dashboard?code={tempCode}";
-        
-        return Redirect(redirectUrl);
+            _logger.LogWarning("User tried to authenticate via Discord while account not found");
+            _logger.LogInformation("Redirecting to registration page");
+            return Redirect($"http://localhost:5129/register?email={e.Email}&username={e.DiscordUsername}");
+        }
+        catch (UnauthorizedAccessException e)
+        {
+            _logger.LogWarning(e, "Error while authenticating user via Discord");
+            return BadRequest("Error while authenticating user via Discord");
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error while authenticating user via Discord");
+            return BadRequest("Error while authenticating user via Discord");
+        }
     }
 
     /// <summary>
@@ -244,7 +264,7 @@ public class UserController : ControllerBase
     /// <returns></returns>
     [HttpGet("auth/discord/retrieve")]
     [AllowAnonymous]
-    public async Task<IActionResult> RetriveTempJwtDataAsync([FromQuery] string code)
+    public async Task<IActionResult> RetrieveTempJwtDataAsync([FromQuery] string code)
     {
         _logger.LogInformation("User requested temp JWT data with code {Code}", code);
         _logger.LogInformation("Existing temp codes: {Codes}", _tempCodeTokens.Keys);
@@ -267,7 +287,7 @@ public class UserController : ControllerBase
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserResponseDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [HttpPost("create")]
+    [HttpPost("register")]
     public async Task<IActionResult> CreateAccountAsync([FromBody] CreateUserInputDTO createUserInputDto)
     {
         try
@@ -278,7 +298,7 @@ public class UserController : ControllerBase
                 password: createUserInputDto.Password
                 );
             
-            return CreatedAtAction(nameof(CreateAccountAsync), UserResponseDTO.FromUser(dbResponse));
+            return Ok(UserResponseDTO.FromUser(dbResponse));
         }
         catch (ArgumentException e)
         {

@@ -7,7 +7,6 @@ import {useDebounce} from "@uidotdev/usehooks";
 import {SiDiscord} from "@icons-pack/react-simple-icons";
 import {useToast} from "@/components/ui/use-toast.ts";
 import {cn} from "@/lib/utils.ts";
-import {useAuth} from "@/providers/auth-provider.tsx";
 import {useAuthStore} from "@/store/auth-store.ts";
 
 export default function LoginPage(): ReactElement {
