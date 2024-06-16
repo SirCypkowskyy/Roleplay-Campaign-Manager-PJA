@@ -34,6 +34,11 @@ export const useAuthStore = create(
                 const response = await Endpoints.User.REFRESH_TOKEN_API(refreshToken);
                 if (!response.isSuccess) {
                     myLog(LogLevel.debug, '[AuthStore/authorizeAsync] Refresh token failed')
+                    Cookies.remove('token');
+                    Cookies.remove('refreshToken');
+                    Cookies.remove('email');
+                    Cookies.remove('role');
+                    Cookies.remove('username');
                     set({isLoggedIn: false});
                     return;
                 }
@@ -82,13 +87,19 @@ export const useAuthStore = create(
                     return;
                 }
                 const response = await Endpoints.User.REFRESH_TOKEN_API(refreshToken);
-                if (!response.isSuccess) {
+                if (!response.isSuccess || !response.data) {
                     myLog(LogLevel.error, '[AuthStore/refreshTokenAsync] Refresh token failed');
+                    Cookies.remove('token');
+                    Cookies.remove('refreshToken');
+                    Cookies.remove('email');
+                    Cookies.remove('role');
+                    Cookies.remove('username');
                     set({isLoggedIn: false});
                     return;
                 }
                 Cookies.set('token', response.data?.token || '');
                 Cookies.set('refreshToken', response.data?.refreshToken || '');
+                Cookies.set('username', response.data?.username || '');
                 set({isLoggedIn: true});
             },
             getBearerToken: () => {

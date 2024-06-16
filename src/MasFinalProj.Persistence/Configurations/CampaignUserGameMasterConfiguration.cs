@@ -24,5 +24,23 @@ public class CampaignUserGameMasterConfiguration : IEntityTypeConfiguration<Camp
         builder.HasOne(cugm => cugm.Campaign)
             // pomimo, że jest to relacja 1 do 1, musimy użyć WithMany, ponieważ korzystamy z dziedziczenia
             .WithMany(c => c.CampaignGameMaster);
+
+        builder.HasData(new List<CampaignUserGameMaster>()
+        {
+            new CampaignUserGameMaster()
+            {
+                Id = 1,
+                UserId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                CampaignId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                Storyline = "Test Storyline",
+            },
+            new CampaignUserGameMaster()
+            {
+                Id = 2,
+                UserId = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                CampaignId = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                Storyline = "Test Storyline 2",
+            },
+        });
     }
 }

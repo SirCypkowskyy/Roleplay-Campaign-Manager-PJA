@@ -1,30 +1,28 @@
-# React + TypeScript + Vite
+# Aplikacja webowa
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Spis treści
 
-Currently, two official plugins are available:
+- [Opis](#opis)
+- [Uruchomienie](#uruchomienie)
+- [Użyte technologie](#użyte-technologie)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Opis
 
-## Expanding the ESLint configuration
+Implementacja aplikacji webowej, wykonanej z React.js z TypeScriptem w ramach Vite.js. Aplikacja komunikuje się z API (ASP.NET Core Web API) za pomocą zapytań HTTP, korzystając z natywnej funkcji fetch.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Uruchomienie
 
-- Configure the top-level `parserOptions` property like this:
+Aplikacja powinna uruchomić się automatycznie przy uruchomieniu API (w konfiguracji `http`). W przeciwnym wypadku, należy uruchomić aplikację ręcznie za pomocą komendy `npm run dev`.
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+## Użyte technologie
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+- React.js - biblioteka do tworzenia interfejsów użytkownika
+- TypeScript - nadzbiór JavaScriptu
+- Vite.js - narzędzie do budowania aplikacji webowych
+- Tailwind CSS - framework CSS (w celu szybkiego stylowania aplikacji)
+- Shad.cn - biblioteka gotowych komponentów React/TailwindCSS (w celu szybkiego tworzenia interfejsu użytkownika)
+- Zustand - biblioteka do zarządzania stanem aplikacji
+- React Router - biblioteka do zarządzania nawigacją i routingiem w aplikacji
+- microsoft/signalr - biblioteka do obsługi komunikacji z serwerem za pomocą protokołu SignalR (w celu obsługi komunikatów w czasie rzeczywistym)
+- RadixUI - biblioteka gotowych komponentów React, dependency Shad.cn (w celu szybkiego tworzenia interfejsu użytkownika)
+- Cookies - biblioteka do zarządzania ciasteczkami w przeglądarce

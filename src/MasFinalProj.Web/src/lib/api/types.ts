@@ -49,12 +49,14 @@ export type BadRequestResponse = {
  * @param sender - nadawca wiadomości
  * @param character - avatar nadawcy
  * @param time - czas wysłania wiadomości
+ * @param characterImageId - identyfikator zasobu avatara
  */
 export type Message = {
     text: string;
     sender: string;
     character: string;
-    time: string
+    time: string;
+    imageId?: string;
 }
 
 /**
@@ -119,6 +121,7 @@ export type SignalRResponseMessage = {
  * @param authorAppRole - rola autora
  * @param authorCampaignRole - rola autora w kampanii
  * @param avatarResourceId - identyfikator zasobu avatara
+ * @param time - czas wysłania wiadomości
  */
 export type SignalRChatMessageReceivedArgumentsType = {
     message: string;
@@ -126,5 +129,18 @@ export type SignalRChatMessageReceivedArgumentsType = {
     character?: string;
     authorAppRole?: string;
     authorCampaignRole?: string;
-    avatarResourceId?: number;
+    avatarResourceId?: string;
+    time?: string;
+}
+
+/**
+ * Postać w grze
+ * @param id - identyfikator postaci
+ * @param name - nazwa postaci
+ * @param imageId - identyfikator zasobu avatara
+ */
+export type CharacterResponseDto = {
+    id: number;
+    name: string;
+    imageId: string;
 }

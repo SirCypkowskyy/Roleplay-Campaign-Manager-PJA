@@ -1,4 +1,11 @@
-import {AuthChallengeResponse, JwtResponse, User, UserDashboardDataResponse} from "@/lib/api/types.ts";
+import {
+    AuthChallengeResponse,
+    CharacterResponseDto,
+    JwtResponse,
+    Message,
+    User,
+    UserDashboardDataResponse
+} from "@/lib/api/types.ts";
 import {myLog} from "@/lib/utils.ts";
 import {ApiResponse, LogLevel} from "@/shared/types.ts";
 
@@ -56,13 +63,15 @@ export const Endpoints = {
             });
 
             if (!response.ok)
+            {
                 return {
                     isSuccess: false,
                     statusCode: response.status,
                     errorMessage: 'Token refresh failed',
                     errorDetails: await response.text(),
                 }
-
+            }
+                
             const data = await response.json();
             return {
                 isSuccess: true,
@@ -174,6 +183,76 @@ export const Endpoints = {
                 data: data as User,
             }
         },
+        GET_CAMPAIGN_MESSAGES_API: async (bearerToken: string, campaignId: string, numToQuery: number, skip: number): Promise<ApiResponse<Message[]>> => {
+            const response = await fetch(`/api/v1/campaign/${campaignId}/messages?numToQuery=${numToQuery}&skip=${skip}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${bearerToken}`
+                }
+            });
+            if (!response.ok)
+                return {
+                    isSuccess: false,
+                    statusCode: response.status,
+                    errorMessage: 'Failed to retrieve campaign messages',
+                    errorDetails: await response.text(),
+                }
+
+            const data = await response.json();
+            return {
+                isSuccess: true,
+                statusCode: response.status,
+                data: data as Message[]
+            }
+        },
+        GET_IMAGE_API: async (bearerToken: string, imageId: string): Promise<ApiResponse<Blob>> => {
+            const response = await fetch(`/api/v1/image/${imageId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${bearerToken}`
+                }
+            });
+            if (!response.ok)
+                return {
+                    isSuccess: false,
+                    statusCode: response.status,
+                    errorMessage: 'Failed to retrieve image',
+                    errorDetails: await response.text(),
+                }
+
+            const data = await response.blob();
+            return {
+                isSuccess: true,
+                statusCode: response.status,
+                data: data
+            }
+        },
+        GET_CONTROLLABLE_CHARACTERS_API: async (bearerToken: string, campaignId: string): Promise<ApiResponse<CharacterResponseDto>> => {
+            const response = await fetch(`/api/v1/campaign/${campaignId}/controllable-characters`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${bearerToken}`
+                }
+            });
+            if (!response.ok)
+                return {
+                    isSuccess: false,
+                    statusCode: response.status,
+                    errorMessage: 'Failed to retrieve controllable characters',
+                    errorDetails: await response.text(),
+                }
+            myLog(LogLevel.debug, 'Controllable characters retrieved:', response);
+
+            const data = await response.json();
+            return {
+                isSuccess: true,
+                statusCode: response.status,
+                data: data as CharacterResponseDto
+            }
+        }
     }
 }
 

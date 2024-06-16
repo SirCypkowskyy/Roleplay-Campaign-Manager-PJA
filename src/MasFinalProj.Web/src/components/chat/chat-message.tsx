@@ -1,6 +1,5 @@
 import {SignalRChatMessageReceivedArgumentsType, SignalRResponseMessage} from "@/lib/api/types.ts";
-import {cn, myLog} from "@/lib/utils.ts";
-import {LogLevel} from "@/shared/types.ts";
+import {cn} from "@/lib/utils.ts";
 import {useEffect, useState} from "react";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar.tsx";
 import Markdown from 'react-markdown'
@@ -10,24 +9,36 @@ interface ChatMessageProps {
 }
 
 function ChatMessage({message}: ChatMessageProps) {
-    const formattedTime = new Date().toLocaleTimeString();
+    const formattedTimeGeneric = new Date().toLocaleTimeString();
+    const [formattedTime, setFormattedTime] = useState<string>(formattedTimeGeneric);
     const [formattedMessage, setFormattedMessage] = useState<SignalRChatMessageReceivedArgumentsType>({} as SignalRChatMessageReceivedArgumentsType);
     const [showAuthor, setShowAuthor] = useState<boolean>(false);
+    const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
 
     const argumentsToMessageObject = (args: string[]): SignalRChatMessageReceivedArgumentsType => {
+        if(args[6] !== undefined)
+        {
+            setFormattedTime(new Date(Date.parse(args[6]))
+                .toLocaleTimeString('pl', {timeZone: 'Asia/Baku'}));
+        }
+        if(args[5] !== undefined && args[5] !== "")
+        {
+            const imageId = args[5];
+            setImageUrl("http://localhost:5128/api/v1/image/" + imageId);
+        }
+        
         return {
             message: args[0],
             author: args[1],
             character: args[2],
             authorAppRole: args[3],
-            authorCampaignRole: args[4]
+            authorCampaignRole: args[4],
+            avatarResourceId: args[5],
+            time: args[6]
         }
     }
-
     useEffect(() => {
         setFormattedMessage(argumentsToMessageObject(message.arguments));
-
-        myLog(LogLevel.debug, "Message formatted: ", formattedMessage);
     }, []);
 
     return {formattedMessage} && (
@@ -37,9 +48,9 @@ function ChatMessage({message}: ChatMessageProps) {
         )}>
             {formattedMessage.author !== 'System' && (
                 <Avatar>
-                    <AvatarImage src="/placeholder.svg" alt="Avatar"/>
+                    <AvatarImage src={imageUrl} alt={formattedMessage.character} />
                     <AvatarFallback>
-                    <span className="text-sm text-white">
+                    <span className="text-sm text-secondary-foreground">
                         {formattedMessage.character === '' ? 'N' : formattedMessage.character?.slice(0, 2)}
                     </span>
                     </AvatarFallback>
@@ -60,15 +71,16 @@ function ChatMessage({message}: ChatMessageProps) {
                         </>
                     )}
                     <span className="text-xs text-gray-500 text-center">
-                        {formattedTime}
+                        {formattedTime !== '' && formattedTime !== undefined ? formattedTime : formattedTimeGeneric}
                     </span>
                 </div>
-                {formattedMessage.message !== '' && (
-                    <p className="text-sm text-gray-800 dark:text-gray-200">
-                        <Markdown className="prose dark:prose-invert">
+                {(formattedMessage.message !== '' && formattedMessage.message !== undefined) && (
+                    <a className="text-sm text-gray-800 dark:text-gray-200">
+                        <Markdown className={cn("prose dark:prose-invert animate-left-to-right-text-fade-in",
+                        )}>
                             {formattedMessage.message}
                         </Markdown>
-                    </p>
+                    </a>
                 )}
             </div>
         </div>

@@ -113,6 +113,9 @@ public class UserController : ControllerBase
     /// </param>
     /// <returns></returns>
     [HttpPost("auth/refresh")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserJwtResponseData))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(string))]
+    [AllowAnonymous]
     public async Task<IActionResult> RefreshTokenAsync([FromBody] RefreshTokenObj refreshToken)
     {
         try

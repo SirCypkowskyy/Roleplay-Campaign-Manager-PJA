@@ -27,5 +27,25 @@ public class CampaignUserPlayerConfiguration : IEntityTypeConfiguration<Campaign
         
         builder.Property(cup => cup.CampaignBio)
             .HasMaxLength(200);
+
+        builder.HasData(new List<CampaignUserPlayer>()
+        {
+            new CampaignUserPlayer()
+            {
+                Id = 3,
+                UserId = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                CampaignId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                CampaignNickname = "Test Player",
+                CampaignBio = "Test Player Bio",
+            },
+            new CampaignUserPlayer()
+            {
+                Id = 4,
+                UserId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                CampaignId = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                CampaignNickname = "Test Player 2",
+                CampaignBio = "Test Player Bio 2",
+            },
+        });
     }
 }

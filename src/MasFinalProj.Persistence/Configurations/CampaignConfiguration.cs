@@ -38,5 +38,28 @@ public class CampaignConfiguration : IEntityTypeConfiguration<Campaign>
             .WithMany(i => i.CampaignsWithImage)
             .HasForeignKey(c => c.CampaignImageId)
             .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasData(new List<Campaign>()
+        {
+            new Campaign()
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                Name = "Mordor Adventures",
+                Description = "Adventures of Gandalf and Aragorn through Mordor",
+                GameCurrency = "Ducats",
+                IsPublic = false,
+                IsArchived = false,
+            },
+            new Campaign()
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                Name = "Joker and Adi",
+                Description = "A quiet evening with Joker and Adolf at the Columbus Brewing Company",
+                GameCurrency = "Gold",
+                IsPublic = false,
+                IsArchived = false,
+                CampaignImageId = 5
+            }
+        });
     }
 }

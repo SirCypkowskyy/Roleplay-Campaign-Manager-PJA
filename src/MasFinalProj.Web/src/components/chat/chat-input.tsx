@@ -1,19 +1,25 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
+import {CharacterResponseDto} from "@/lib/api/types.ts";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar.tsx";
+import {myLog} from "@/lib/utils.ts";
+import {LogLevel} from "@/shared/types.ts";
 
 interface ChatInputProps {
     onSendMessage: (message: string, author: string) => void;
-    controlledCharacters: string[];
+    controlledCharacters: CharacterResponseDto[];
     className?: string;
 }
 
-function ChatInput({ onSendMessage, controlledCharacters, className }: ChatInputProps) {
+function ChatInput({onSendMessage, controlledCharacters, className}: ChatInputProps) {
     const [input, setInput] = useState<string>('');
     const [character, setCharacter] = useState<string>('');
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (input.trim() !== '') {
-            onSendMessage(input, character);
+            const char = controlledCharacters.find((char) => char.id === Number(character));
+            myLog(LogLevel.debug, "Sending message: ", input, char)
+            onSendMessage(input, char?.name || '');
             setInput('');
         }
     };
@@ -35,7 +41,16 @@ function ChatInput({ onSendMessage, controlledCharacters, className }: ChatInput
                 >
                     <option value="">Select Character</option>
                     {controlledCharacters.map((char, idx) => (
-                        <option key={idx} value={char}>{char}</option>
+                        <option key={idx} value={char.id}>
+                            <Avatar>
+                                <AvatarImage src={"/api/v1/images/" + char.imageId} alt="Character Avatar"/>
+                                <AvatarFallback>
+                                <span className="text-sm">
+                                    {char.name}
+                                </span>
+                                </AvatarFallback>
+                            </Avatar>
+                        </option>
                     ))}
                 </select>
                 <button type="submit" className="p-2 border rounded bg-primary text-primary-foreground">Send</button>

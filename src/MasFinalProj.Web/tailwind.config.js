@@ -66,10 +66,22 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "left-to-right-text-fade-in": {
+          "0%": {
+            opacity: "0",
+            maskImage: "linear-gradient(to right, black 0%, transparent 100%)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateX(0)",
+            maskImage: "none",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "left-to-right-text-fade-in": "left-to-right-text-fade-in 1s ease-out",
       },
     },
   },

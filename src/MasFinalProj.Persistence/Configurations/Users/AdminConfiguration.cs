@@ -19,27 +19,29 @@ public class AdminConfiguration : IEntityTypeConfiguration<Admin>
             = AuthHelper.GeneratePasswordHash("Test123$");
         
         // Seedowany admin
-        builder.HasData(new Admin
-        {
-            Id = Guid.NewGuid(),
-            Username = "BaseAdmin",
-            Email = "b.admin@s24759masfinal.com",
-            PasswordHash = authData.hashPasswrdBase64,
-            PasswordSalt = authData.saltBase64,
-            StaffSinceUtc = DateTime.UtcNow,
-            Description = "Base admin account",
-        });
-
         builder.HasData(new Admin()
         {
-            Id = Guid.NewGuid(),
+            Id = Guid.Parse("00000000-0000-0000-0000-000000000001"),
             Username = "SirCypkowskyy",
             Email = "cypkowski@gmail.com",
             PasswordHash = authData.hashPasswrdBase64,
             PasswordSalt = authData.saltBase64,
             StaffSinceUtc = DateTime.UtcNow,
             Description = "Moje konto do testowania logowania z Discord OAuth",
-            IsSuperUser = true
+            IsSuperUser = true,
+            ProfileImageId = 3,
+        });
+        
+        builder.HasData(new Admin
+        {
+            Id = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+            Username = "BaseAdmin",
+            Email = "b.admin@s24759masfinal.com",
+            PasswordHash = authData.hashPasswrdBase64,
+            PasswordSalt = authData.saltBase64,
+            StaffSinceUtc = DateTime.UtcNow,
+            Description = "Base admin account",
+            ProfileImageId = 1
         });
     }
 }

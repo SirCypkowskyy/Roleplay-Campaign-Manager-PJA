@@ -8,7 +8,6 @@ interface ChatBoxProps {
 }
 
 function ChatBox({ messages, className }: ChatBoxProps) {
-
     return (
         <main className={cn(
             "overflow-y-auto p-6",

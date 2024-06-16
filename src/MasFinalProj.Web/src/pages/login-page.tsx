@@ -92,22 +92,6 @@ export default function LoginPage(): ReactElement {
         setLoginLoading(true);
 
         try {
-            // const response = await fetch("api/v1/user/auth", {
-            //     method: "POST",
-            //     headers: {
-            //         "Content-Type": "application/json",
-            //     },
-            //     body: JSON.stringify({email, password})
-            // });
-            //
-            // if (!response.ok) {
-            //     if (response.status >= 400 && response.status < 500)
-            //         throw new Error("Invalid email or password");
-            //     else
-            //         throw new Error("Server error");
-            // }
-            //
-            // const convertedResponse = await response.json() as JwtResponse;
             if(await auth.loginAsync(email, password))
             {
                 setSuccessLogin(true);
