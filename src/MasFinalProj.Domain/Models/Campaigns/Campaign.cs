@@ -67,7 +67,7 @@ public class Campaign : BaseEntity<Guid>, IValidateOnSave
     /// Mistrz gry jest jeden na kampanię, ale z racji na naturę konfiguracji relacji w EF Core,
     /// konieczne jest użycie kolekcji
     /// </remarks>
-    public virtual ICollection<CampaignUserGameMaster>  CampaignGameMaster { get; set; }
+    public virtual ICollection<CampaignUserGameMaster>  CampaignGameMaster { get; set; } = new List<CampaignUserGameMaster>();
     
     /// <summary>
     /// Notatki w ramach kampanii

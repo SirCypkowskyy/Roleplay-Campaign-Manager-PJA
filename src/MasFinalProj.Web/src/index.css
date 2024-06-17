@@ -24,6 +24,9 @@
         --input: 0 0% 89.8%;
         --ring: 0 72.2% 50.6%;
         --radius: 0.75rem;
+        .link-underline {
+            background-image: linear-gradient(transparent, transparent), linear-gradient(#000, #000);
+        }
     }
 
     .dark {
@@ -46,6 +49,23 @@
         --border: 0 0% 14.9%;
         --input: 0 0% 14.9%;
         --ring: 0 72.2% 50.6%;
+        .link-underline {
+            background-image: linear-gradient(transparent, transparent), linear-gradient(#fff, #fff);
+        }
+    }
+
+    .link-underline {
+        border-bottom-width: 0;
+        background-size: 0 3px;
+        background-position: 0 100%;
+        background-repeat: no-repeat;
+        transition: background-size .5s ease-in-out;
+    }
+
+
+    .link-underline:hover {
+        background-size: 100% 3px;
+        background-position: 0 100%
     }
 }
 
@@ -59,3 +79,4 @@
         @apply bg-background text-foreground;
     }
 }
+

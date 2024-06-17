@@ -1,4 +1,4 @@
-import {Activity, ArrowUpRight, CreditCard, DollarSign, Link, Users,} from "lucide-react"
+import {Activity, CreditCard, DollarSign, Users,} from "lucide-react"
 
 import {Avatar, AvatarFallback, AvatarImage,} from "@/components/ui/avatar"
 import {Badge} from "@/components/ui/badge"
@@ -6,13 +6,39 @@ import {Button} from "@/components/ui/button"
 import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from "@/components/ui/card"
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table"
 import {useAuthStore} from "@/store/auth-store.ts";
-import { ReactElement } from "react"
+import { ReactElement, useEffect, useState } from "react"
+import {CampaignResultDTO} from "@/lib/api/types.ts";
+import {Endpoints} from "@/lib/api/endpoints.ts";
+import {useToast} from "@/components/ui/use-toast.ts";
+import {Link} from "react-router-dom"
 
 /**
  * Strona dashboardu
  */
 export default function DashboardPage(): ReactElement {
     const auth = useAuthStore();
+    const [campaigns, setCampaigns] = useState<CampaignResultDTO[]>([]);
+    const toast = useToast();
+    
+    useEffect(() => {
+        if(!auth.userData)
+            return;
+        
+        Endpoints.User.GET_USER_CAMPAIGNS_API(auth.getBearerToken(), auth.userData?.username).then((response) => {
+            if(!response.isSuccess)
+            {
+                toast.toast({
+                    title: "Error",
+                    description: response.errorMessage,
+                    variant: "destructive"
+                });
+                return;
+            }
+            
+            setCampaigns(response.data as CampaignResultDTO[]);
+        })
+    }, []);
+    
     
     return (<main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
         <h1 className="text-2xl font-bold">Welcome back, {auth.userData?.username}!</h1>
@@ -90,9 +116,8 @@ export default function DashboardPage(): ReactElement {
                         </CardDescription>
                     </div>
                     <Button asChild size="sm" className="ml-auto gap-1">
-                        <Link to="#">
-                            View All
-                            <ArrowUpRight className="h-4 w-4"/>
+                        <Link to="/campaign/create">
+                            Create Campaign
                         </Link>
                     </Button>
                 </CardHeader>
@@ -107,29 +132,36 @@ export default function DashboardPage(): ReactElement {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            <TableRow>
-                                <TableCell>
-                                    <div className="font-medium">
-                                        <Link to={"#"} className="hover:underline">
-                                            Świat Apokalipsy - Przygoda
-                                        </Link>
-                                    </div>
-                                    <div className="hidden text-sm text-muted-foreground md:inline">
-                                        hosted by&nbsp;
-                                        <Link to={"#"} className="hover:underline">
-                                            John Doe
-                                        </Link>
-                                    </div>
-                                </TableCell>
-                                <TableCell className="text-right">
-                                    2023-06-23
-                                </TableCell>
-                            </TableRow>
+                            {campaigns.map((campaign, index) => (
+                                <TableRow key={index}>
+                                    <TableCell>
+                                        <div className="font-medium">
+                                            <a href={`/campaign/${campaign.id}/chat`} className="hover:underline">
+                                                {campaign.name}
+                                            </a>
+                                        </div>
+                                        <div className="hidden text-sm text-muted-foreground md:inline">
+                                            played by&nbsp;
+                                            <a href={`/campaign/${campaign.id}/chat`} className="hover:underline">
+                                                {campaign.users.map((user, index) => (
+                                                    <span key={index}>
+                                                        {user.username}
+                                                        {index < campaign.users.length - 1 ? ", " : ""}
+                                                    </span>
+                                                ))}
+                                            </a>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                        Recent
+                                    </TableCell>
+                                </TableRow>
+                            ))}
                         </TableBody>
                     </Table>
                 </CardContent>
             </Card>
-            <Card x-chunk="dashboard-01-chunk-5">
+            <Card>
                 <CardHeader>
                     <CardTitle>Recent Messages</CardTitle>
                 </CardHeader>

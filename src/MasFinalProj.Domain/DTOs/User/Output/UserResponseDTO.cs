@@ -1,3 +1,5 @@
+using MasFinalProj.Domain.Models.Users;
+
 namespace MasFinalProj.Domain.DTOs.User.Output;
 
 /// <summary>
@@ -31,11 +33,17 @@ public class UserResponseDTO
     /// </returns>
     public static UserResponseDTO FromUser(Domain.Models.Users.User entity)
     {
-        return new UserResponseDTO
+        return entity switch
         {
-            Id = entity.Id,
-            Username = entity.Username,
-            Email = entity.Email,
+            Admin admin => new UserResponseDTO
+            {
+                Id = admin.Id, Username = admin.Username, Email = admin.Email
+            },
+            Moderator moderator => new UserResponseDTO
+            {
+                Id = moderator.Id, Username = moderator.Username, Email = moderator.Email
+            },
+            _ => new UserResponseDTO { Id = entity.Id, Username = entity.Username, Email = entity.Email }
         };
     }
 }

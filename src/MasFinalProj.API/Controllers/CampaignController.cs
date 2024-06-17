@@ -66,6 +66,8 @@ public class CampaignController : AbstractController<Guid, Campaign, AbstractOut
         try
         {
             var campaign = await _campaignRepository.GetWithPlayersAsync(campaignId);
+            if (campaign is null)
+                return NotFound();
             var campaignResult = new CampaignResultDTO(campaign);
             return Ok(campaignResult);
         } catch (Exception e)
@@ -83,14 +85,17 @@ public class CampaignController : AbstractController<Guid, Campaign, AbstractOut
     /// Nazwa użytkownika gracza.
     /// </param>
     /// <returns></returns>
-    [HttpGet("player-campaings")]
+    [HttpGet("player/campaings")]
     [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<CampaignResultDTO>))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
     public async Task<IActionResult> GetPlayerCampaignsAsync([FromQuery] string username)
     {
         try
         {
             var callerIdentity = User.Identity?.Name;
             var callerRole = User.FindFirst(ClaimTypes.Role)?.Value;
+            _logger.LogInformation("Caller identity: {CallerIdentity}, caller role: {CallerRole}", callerIdentity, callerRole);
             if (callerIdentity == null)
                 return Unauthorized();
             
@@ -98,7 +103,15 @@ public class CampaignController : AbstractController<Guid, Campaign, AbstractOut
                 return Forbid();
             
             var campaigns = await _campaignRepository.GetPlayerCampaignsAsync(username);
-            return Ok(campaigns);
+            
+            if (campaigns.Count == 0)
+                return NotFound();
+            
+            var convertedCampaigns = campaigns
+                .Select(c =>  new CampaignResultDTO(c))
+                .ToList();
+            _logger.LogInformation("Returning campaings with Ids: {CampaignIds}", string.Join(", ", convertedCampaigns.Select(c => c.Id)));
+            return Ok(convertedCampaigns);
             
         } catch (Exception e)
         {

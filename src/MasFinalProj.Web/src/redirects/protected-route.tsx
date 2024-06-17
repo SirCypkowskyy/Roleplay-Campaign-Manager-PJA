@@ -55,7 +55,7 @@ export default function ProtectedRoute({redirectTo = '/login'}: ProtectedRoutePr
                 });
             });
         }
-    }, []);
+    }, [auth.isLoggedIn]);
 
     return <Outlet/>;
 }

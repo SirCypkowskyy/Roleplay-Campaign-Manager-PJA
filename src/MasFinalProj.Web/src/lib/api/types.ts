@@ -144,3 +144,20 @@ export type CharacterResponseDto = {
     name: string;
     imageId: string;
 }
+
+
+/**
+ * DTO odpowiedzi z danymi kampanii
+ * @param id - identyfikator kampanii
+ * @param name - nazwa kampanii
+ * @param description - opis kampanii
+ * @param imageId - identyfikator zasobu obrazka
+ * @param users - lista użytkowników
+ */
+export type CampaignResultDTO = {
+    id: number;
+    name: string;
+    description: string;
+    imageId: string;
+    users : User[];
+}

@@ -2,6 +2,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using Asp.Versioning;
+using MasFinalProj.API.Extensions;
 using MasFinalProj.API.Hubs;
 using MasFinalProj.Domain.Abstractions.Options;
 using MasFinalProj.Domain.Models.NoDbModels;
@@ -28,7 +29,7 @@ public class Program
         builder.Configuration.Bind(configurationOptions);
 
         builder.Services.AddPersistence();
-
+        
         builder.Services.AddControllers()
             .AddJsonOptions(opts =>
             {
@@ -77,6 +78,7 @@ public class Program
         builder.Services.AddAuthorization();
 
         builder.Services.AddEndpointsApiExplorer();
+        
         builder.Services.AddSwaggerGen(opts =>
         {
             opts.EnableAnnotations();
@@ -85,7 +87,7 @@ public class Program
             {
                 Title = "MasFinalProj.API",
                 Version = "v1",
-                Description = "Aplikacja backendowa web API dla projektu z przedmiotu MAS",
+                Description = "Aplikacja backendowa web API dla projektu z przedmiotu MAS. Alternatywna przeglądarka API: [Scalar](/scalar/swagger)",
                 Contact = new OpenApiContact
                 {
                     Name = "Cyprian Gburek",
@@ -167,6 +169,7 @@ public class Program
         {
             app.UseSwagger();
             app.UseSwaggerUI();
+            app.MapScalarUi();
         }
 
         app.UseHttpsRedirection();

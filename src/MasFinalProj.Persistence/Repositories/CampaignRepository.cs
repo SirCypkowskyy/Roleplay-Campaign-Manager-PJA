@@ -14,14 +14,14 @@ namespace MasFinalProj.Persistence.Repositories;
 public class CampaignRepository : GenericRepository<Guid, Campaign>, ICampaignRepository
 {
     private readonly DatabaseContext _context;
-    private readonly ILogger<GenericRepository<Guid, Campaign>> _logger;
+    private readonly ILogger<CampaignRepository> _logger;
     
     /// <summary>
     /// Konstruktor repozytorium kampanii.
     /// </summary>
     /// <param name="context"></param>
     /// <param name="logger"></param>
-    public CampaignRepository(DatabaseContext context, ILogger<GenericRepository<Guid, Campaign>> logger) : base(context, logger)
+    public CampaignRepository(DatabaseContext context, ILogger<CampaignRepository> logger) : base(context, logger)
     {
         _context = context;
         _logger = logger;
@@ -30,13 +30,40 @@ public class CampaignRepository : GenericRepository<Guid, Campaign>, ICampaignRe
     /// <inheritdoc />
     public async Task<List<Campaign>> GetPlayerCampaignsAsync(string username)
     {
-        return await _context.Campaigns.Include(c => c.CampaignPlayers).ThenInclude(cp => cp.User)
-            .Include(c => c.CampaignImage)
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+        if (user is null)
+        {
+            _logger.LogWarning("User with username {Username} not found", username);
+            return [];
+        }
+        
+        var campaignsAsPlayer = await _context.Campaigns.Include(c => c.CampaignPlayers)
+            .Include(c => c.CampaignPlayers).ThenInclude(cp => cp.User)
             .Include(c => c.CampaignGameMaster).ThenInclude(cgm => cgm.User)
-            .Where(c => c.CampaignPlayers.Any(cp => cp.User.Username == username) ||
-                        c.CampaignGameMaster.Any(cgm => cgm.User.Username == username))
+            .Where(c => c.CampaignPlayers.Any(cp => cp.UserId == user.Id))
             .AsNoTracking()
             .ToListAsync();
+        
+        _logger.LogInformation("Found {Count} campaigns as player", campaignsAsPlayer.Count);
+        
+        var campaignsAsGameMaster = await _context.Campaigns.Include(c => c.CampaignGameMaster)
+            .Include(c => c.CampaignGameMaster).ThenInclude(cgm => cgm.User)
+            .Include(c => c.CampaignPlayers).ThenInclude(cp => cp.User)
+            .Where(c => c.CampaignGameMaster.Any(cgm => cgm.UserId == user.Id))
+            .AsNoTracking()
+            .ToListAsync();
+        
+        _logger.LogInformation("Found {Count} campaigns as game master", campaignsAsGameMaster.Count);
+        
+        return campaignsAsPlayer.Concat(campaignsAsGameMaster).ToList();
+        
+        // return await _context.Campaigns.Include(c => c.CampaignPlayers).ThenInclude(cp => cp.User)
+        //     .Include(c => c.CampaignImage)
+        //     .Include(c => c.CampaignGameMaster).ThenInclude(cgm => cgm.User)
+        //     .Where(c => c.CampaignPlayers.Any(cp => cp.User.Username == username) ||
+        //                 c.CampaignGameMaster.Any(cgm => cgm.User.Username == username))
+        //     .AsNoTracking()
+        //     .ToListAsync();
     }
 
     /// <inheritdoc />

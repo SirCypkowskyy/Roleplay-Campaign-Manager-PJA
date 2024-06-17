@@ -1,5 +1,5 @@
 import {
-    AuthChallengeResponse,
+    AuthChallengeResponse, CampaignResultDTO,
     CharacterResponseDto,
     JwtResponse,
     Message,
@@ -181,6 +181,30 @@ export const Endpoints = {
                 isSuccess: true,
                 statusCode: response.status,
                 data: data as User,
+            }
+        },
+        GET_USER_CAMPAIGNS_API: async (bearerToken: string, username: string): Promise<ApiResponse<CampaignResultDTO[]>> => {
+            const response = await fetch('/api/v1/campaign/player/campaings?username=' + username, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${bearerToken}`
+                }
+            });
+            if (!response.ok)
+                return {
+                    isSuccess: false,
+                    statusCode: response.status,
+                    errorMessage: 'Failed to retrieve user campaigns',
+                    errorDetails: await response.text(),
+                }
+            
+            const data = await response.json();
+            myLog(LogLevel.debug, 'User campaigns retrieved:', data);
+            return {
+                isSuccess: true,
+                statusCode: response.status,
+                data: data as CampaignResultDTO[],
             }
         },
         GET_CAMPAIGN_MESSAGES_API: async (bearerToken: string, campaignId: string, numToQuery: number, skip: number): Promise<ApiResponse<Message[]>> => {
