@@ -1,4 +1,6 @@
-# Aplikacja webowa
+# Aplikacja webowa w React.js
+
+Aplikacja webowa wykonana w React.js z TypeScriptem w ramach Vite.js. Aplikacja komunikuje się z API (ASP.NET Core Web API) za pomocą zapytań HTTP, korzystając z natywnej funkcji fetch.
 
 ## Spis treści
 

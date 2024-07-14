@@ -1,3 +1,11 @@
+/* @2024 Cyprian Gburek.
+ * Proszę nie kopiować kodu bez zgody autora.
+ * Kod jest własnością uczelni (Polsko-Japońska Akademia Technik Komputerowych, PJATK),
+ * i jest udostępniany wyłącznie w celach edukacyjnych.
+ *
+ * Wykorzystanie kodu we własnych projektach na zajęciach jest zabronione, a jego wykorzystanie
+ * może skutkować oznanieniem projektu jako plagiat.
+ */
 using System.Security.Claims;
 using Asp.Versioning;
 using MasFinalProj.Domain.Abstractions.Options;
@@ -16,9 +24,10 @@ namespace MasFinalProj.API.Controllers;
 /// <summary>
 /// Kontroler użytkownika
 /// </summary>
-[Route("api/v{version:apiVersion}/[controller]")]
+
 [ApiController]
 [ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
 public class UserController : ControllerBase
 {
     private readonly ConfigurationOptions _configurationOptions;
@@ -163,6 +172,91 @@ public class UserController : ControllerBase
         });
     }
     
+    
+    /// <summary>
+    /// Metoda do pobierania tymczasowych danych JWT z kodu
+    /// </summary>
+    /// <param name="code">
+    /// Kod do pobrania danych
+    /// </param>
+    /// <returns></returns>
+    [HttpGet("auth/discord/retrieve")]
+    [AllowAnonymous]
+    public async Task<IActionResult> RetrieveTempJwtDataAsync([FromQuery] string code)
+    {
+        _logger.LogInformation("User requested temp JWT data with code {Code}", code);
+        _logger.LogInformation("Existing temp codes: {Codes}", _tempCodeTokens.Keys);
+        
+        if (_tempCodeTokens.Remove(code, out var data)) return Ok(data);
+        
+        _logger.LogWarning("Code {Code} not found", code);
+        return BadRequest("Code not found");
+    }
+
+    /// <summary>
+    /// Metoda do tworzenia konta
+    /// </summary>
+    /// <param name="createUserInputDto">
+    /// Dane do utworzenia konta
+    /// </param>
+    /// <returns>
+    /// Odpowiedź ze stworzonym kontem
+    /// </returns>
+    [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserResponseDTO))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [HttpPost("register")]
+    public async Task<IActionResult> CreateAccountAsync([FromBody] CreateUserInputDTO createUserInputDto)
+    {
+        try
+        {
+            var dbResponse = await _userRepository.CreateUserAsync(
+                createUserInputDto.Email,
+                createUserInputDto.Username,
+                password: createUserInputDto.Password
+                );
+            
+            return Ok(UserResponseDTO.FromUser(dbResponse));
+        }
+        catch (ArgumentException e)
+        {
+            _logger.LogWarning(e, "Error while creating user with email {Email}", createUserInputDto.Email);
+            return BadRequest("Podany adres email, nazwa użytkownika lub hasło nie są poprawne w zapisie!");
+        }
+        catch (UnauthorizedAccessException e)
+        {
+            _logger.LogWarning(e, "Error while creating user with email {Email}", createUserInputDto.Email);
+            return BadRequest("Podany adres email lub nazwa użytkownika są już zajęte, lub email jest na czarnej liście!");
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error while creating user with email {Email}", createUserInputDto.Email);
+            return BadRequest("Wystąpił nieznany błąd podczas tworzenia konta!");
+        }
+    }
+
+    /// <summary>
+    /// Metoda do pobierania danych do dashboardu użytkownika
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet("dashboard")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDashboardDataDTO))]
+    public async Task<IActionResult> GetUserDashboardData()
+    {
+        var user = User;
+        var claims = user.Claims;
+        
+        _logger.LogInformation("User {Username} requested dashboard data", user.FindFirstValue(ClaimTypes.Name));
+        _logger.LogDebug("User {Username} requested dashboard data with claims: {Claims}", user.FindFirstValue(ClaimTypes.Name), claims);
+        
+        var userId = user.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new UnauthorizedAccessException("User not found");
+        
+        var userDashboardData = await _userRepository.GetUserDashboardDataAsync(userId);
+        
+        return Ok(userDashboardData);
+    }
+    
     /// <summary>
     /// Metoda do autoryzacji użytkownika przez Discorda
     /// </summary>
@@ -258,87 +352,4 @@ public class UserController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Metoda do pobierania tymczasowych danych JWT z kodu
-    /// </summary>
-    /// <param name="code">
-    /// Kod do pobrania danych
-    /// </param>
-    /// <returns></returns>
-    [HttpGet("auth/discord/retrieve")]
-    [AllowAnonymous]
-    public async Task<IActionResult> RetrieveTempJwtDataAsync([FromQuery] string code)
-    {
-        _logger.LogInformation("User requested temp JWT data with code {Code}", code);
-        _logger.LogInformation("Existing temp codes: {Codes}", _tempCodeTokens.Keys);
-        
-        if (_tempCodeTokens.Remove(code, out var data)) return Ok(data);
-        
-        _logger.LogWarning("Code {Code} not found", code);
-        return BadRequest("Code not found");
-    }
-
-    /// <summary>
-    /// Metoda do tworzenia konta
-    /// </summary>
-    /// <param name="createUserInputDto">
-    /// Dane do utworzenia konta
-    /// </param>
-    /// <returns>
-    /// Odpowiedź ze stworzonym kontem
-    /// </returns>
-    [AllowAnonymous]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserResponseDTO))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [HttpPost("register")]
-    public async Task<IActionResult> CreateAccountAsync([FromBody] CreateUserInputDTO createUserInputDto)
-    {
-        try
-        {
-            var dbResponse = await _userRepository.CreateUserAsync(
-                createUserInputDto.Email,
-                createUserInputDto.Username,
-                password: createUserInputDto.Password
-                );
-            
-            return Ok(UserResponseDTO.FromUser(dbResponse));
-        }
-        catch (ArgumentException e)
-        {
-            _logger.LogWarning(e, "Error while creating user with email {Email}", createUserInputDto.Email);
-            return BadRequest("Podany adres email, nazwa użytkownika lub hasło nie są poprawne w zapisie!");
-        }
-        catch (UnauthorizedAccessException e)
-        {
-            _logger.LogWarning(e, "Error while creating user with email {Email}", createUserInputDto.Email);
-            return BadRequest("Podany adres email lub nazwa użytkownika są już zajęte, lub email jest na czarnej liście!");
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error while creating user with email {Email}", createUserInputDto.Email);
-            return BadRequest("Wystąpił nieznany błąd podczas tworzenia konta!");
-        }
-    }
-
-    /// <summary>
-    /// Metoda do pobierania danych do dashboardu użytkownika
-    /// </summary>
-    /// <returns></returns>
-    [Authorize]
-    [HttpGet("dashboard")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDashboardDataDTO))]
-    public async Task<IActionResult> GetUserDashboardData()
-    {
-        var user = User;
-        var claims = user.Claims;
-        
-        _logger.LogInformation("User {Username} requested dashboard data", user.FindFirstValue(ClaimTypes.Name));
-        _logger.LogDebug("User {Username} requested dashboard data with claims: {Claims}", user.FindFirstValue(ClaimTypes.Name), claims);
-        
-        var userId = user.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new UnauthorizedAccessException("User not found");
-        
-        var userDashboardData = await _userRepository.GetUserDashboardDataAsync(userId);
-        
-        return Ok(userDashboardData);
-    }
 }

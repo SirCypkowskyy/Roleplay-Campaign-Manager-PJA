@@ -1,6 +1,0 @@
-@MasFinalProj.API_HostAddress = http://localhost:5128
-
-GET {{MasFinalProj.API_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

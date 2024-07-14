@@ -1,3 +1,11 @@
+/* @2024 Cyprian Gburek.
+ * Proszę nie kopiować kodu bez zgody autora.
+ * Kod jest własnością uczelni (Polsko-Japońska Akademia Technik Komputerowych, PJATK),
+ * i jest udostępniany wyłącznie w celach edukacyjnych.
+ *
+ * Wykorzystanie kodu we własnych projektach na zajęciach jest zabronione, a jego wykorzystanie
+ * może skutkować oznanieniem projektu jako plagiat.
+ */
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
@@ -14,6 +22,9 @@ using Serilog;
 
 namespace MasFinalProj.API;
 
+/// <summary>
+/// Główna klasa programu WebAPI.
+/// </summary>
 public class Program
 {
     public static void Main(string[] args)
@@ -85,15 +96,9 @@ public class Program
 
             opts.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = "MasFinalProj.API",
+                Title = "RoleplayCampaignManager",
                 Version = "v1",
-                Description = "Aplikacja backendowa web API dla projektu z przedmiotu MAS. Alternatywna przeglądarka API: [Scalar](/scalar/swagger)",
-                Contact = new OpenApiContact
-                {
-                    Name = "Cyprian Gburek",
-                    Email = "s24759@pjwstk.edu.pl",
-                    Url = new Uri("https://cg-personal.vercel.app/")
-                }
+                Description = "Interfejs backendowy web API dla aplikacji. Alternatywna przeglądarka API: [Scalar](/scalar/swagger)",
             });
 
             opts.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme

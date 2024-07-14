@@ -1,3 +1,11 @@
+/* @2024 Cyprian Gburek.
+ * Proszę nie kopiować kodu bez zgody autora.
+ * Kod jest własnością uczelni (Polsko-Japońska Akademia Technik Komputerowych, PJATK),
+ * i jest udostępniany wyłącznie w celach edukacyjnych.
+ *
+ * Wykorzystanie kodu we własnych projektach na zajęciach jest zabronione, a jego wykorzystanie
+ * może skutkować oznanieniem projektu jako plagiat.
+ */
 using MasFinalProj.Domain.Abstractions.Models;
 using MasFinalProj.Domain.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -17,9 +25,9 @@ public abstract class AbstractController<TKey, TEntity, TInputDto, TOutputDto> :
     /// Konstruktor kontrolera.
     /// </summary>
     /// <param name="repository"></param>
-    /// <param name="logger"></param>
     protected AbstractController(IGenericRepository<TKey, TEntity> repository)
     {
+        // Przypisanie repozytorium do pola prywatnego.
         _repository = repository;
     }
 

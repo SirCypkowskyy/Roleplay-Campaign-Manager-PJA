@@ -1,4 +1,12 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+﻿# /* @2024 Cyprian Gburek.
+  # * Proszę nie kopiować kodu bez zgody autora.
+  # * Kod jest własnością uczelni (Polsko-Japońska Akademia Technik Komputerowych, PJATK),
+  # * i jest udostępniany wyłącznie w celach edukacyjnych.
+  # *
+  # * Wykorzystanie kodu we własnych projektach na zajęciach jest zabronione, a jego wykorzystanie
+  # * może skutkować oznanieniem projektu jako plagiat.
+  # */
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER $APP_UID
 WORKDIR /app
 EXPOSE 8080

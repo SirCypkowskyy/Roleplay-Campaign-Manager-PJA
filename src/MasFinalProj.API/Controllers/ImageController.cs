@@ -1,3 +1,11 @@
+/* @2024 Cyprian Gburek.
+ * Proszę nie kopiować kodu bez zgody autora.
+ * Kod jest własnością uczelni (Polsko-Japońska Akademia Technik Komputerowych, PJATK),
+ * i jest udostępniany wyłącznie w celach edukacyjnych.
+ *
+ * Wykorzystanie kodu we własnych projektach na zajęciach jest zabronione, a jego wykorzystanie
+ * może skutkować oznanieniem projektu jako plagiat.
+ */
 using MasFinalProj.API.Abstractions;
 using MasFinalProj.Domain.DTOs;
 using MasFinalProj.Domain.DTOs.Image.Output;
@@ -18,41 +26,18 @@ public class ImageController : AbstractController<long, Image, AbstractOutputDTO
 {
     private readonly ILogger<ImageController> _logger;
     private readonly IImageRepository _imageRepository;
-    
+   
+    /// <summary>
+    /// Konstruktor kontrolera
+    /// </summary>
+    /// <param name="logger"></param>
+    /// <param name="imageRepository"></param>
     public ImageController(ILogger<ImageController> logger, IImageRepository imageRepository) : base(imageRepository)
     {
         _logger = logger;
         _imageRepository = imageRepository;
     }
     
-    /// <summary>
-    /// Pobiera obraz o podanym id
-    /// </summary>
-    /// <param name="id">
-    /// Id obrazu
-    /// </param>
-    /// <returns>
-    /// Obraz w formacie base64
-    /// </returns>
-    [HttpGet("{id}")]
-    [ProducesResponseType(typeof(FileContentResult), 200)]
-    [ProducesResponseType(404)]
-    [ProducesResponseType(500)]
-    public async Task<IActionResult> GetImage([FromRoute] long id)
-    {
-        try
-        {
-            var image = await _imageRepository.GetByIdAsync(id);
-            if (image is null)
-                return NotFound();
-            return File(Convert.FromBase64String(image.Base64Image), $"image/{image.ImageFormat}");
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error while getting image with id {Id}", id);
-            return StatusCode(500);
-        }
-    }
 
     /// <summary>
     /// Pobiera wszystkie obrazy
@@ -93,6 +78,36 @@ public class ImageController : AbstractController<long, Image, AbstractOutputDTO
             if (image is null)
                 return NotFound();
             return Ok(image);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error while getting image with id {Id}", id);
+            return StatusCode(500);
+        }
+    }
+    
+    
+    /// <summary>
+    /// Pobiera obraz o podanym id
+    /// </summary>
+    /// <param name="id">
+    /// Id obrazu
+    /// </param>
+    /// <returns>
+    /// Obraz w formacie base64
+    /// </returns>
+    [HttpGet("{id}")]
+    [ProducesResponseType(typeof(FileContentResult), 200)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(500)]
+    public async Task<IActionResult> GetImage([FromRoute] long id)
+    {
+        try
+        {
+            var image = await _imageRepository.GetByIdAsync(id);
+            if (image is null)
+                return NotFound();
+            return File(Convert.FromBase64String(image.Base64Image), $"image/{image.ImageFormat}");
         }
         catch (Exception e)
         {
