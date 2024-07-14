@@ -1,5 +1,8 @@
 # RoleplayCampaignManager - MAS Final Project
 
+[Zrzuty ekranu](static/)
+[UML](UML/) 
+
 Aplikacja do zarządzania kampaniami i czatami RPG w czasie rzeczywistym, stworzona w ramach projektu końcowego z przedmiotu Modelowanie i Analiza Systemów informacyjnych na PJATK.
 
 Poniżej zawarłem kolekcje instrukcji potrzebnych do uruchomienia aplikacji, a także opis funkcjonalności.
