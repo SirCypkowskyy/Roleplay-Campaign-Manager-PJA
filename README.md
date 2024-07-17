@@ -11,6 +11,7 @@ Aplikacja do zarządzania kampaniami i czatami RPG w czasie rzeczywistym, stworz
 ![Zrzut ekranu 4](static/4.png)
 ![Zrzut ekranu 9](static/9.png)
 ![Zrzut ekranu 10](static/10.png)
+![Analityczny Diagram Klas](UML/analysis_class_diagram.png)
 
 Poniżej zawarłem kolekcje instrukcji potrzebnych do uruchomienia aplikacji, a także opis funkcjonalności.
 
