@@ -84,7 +84,7 @@ Backend:
 
 Frontend:
 - React.js - library for building user interfaces
-- TypeScript - a superset of JavaScript
+- TypeScript - for type-safety
 - Vite.js - tool for building web applications
 - Tailwind CSS - CSS framework for rapid application styling
 - Shad.cn - library of ready-made React/TailwindCSS components for quick UI development
