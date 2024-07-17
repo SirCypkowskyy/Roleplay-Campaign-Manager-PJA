@@ -1,4 +1,4 @@
-# RoleplayCampaignManager - MAS Final Project
+# RoleplayCampaignManager - PJATK-MAS Final Project
 
 [Wszystkie Zrzuty ekranu](static/)
 
