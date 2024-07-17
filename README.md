@@ -86,7 +86,7 @@ Backend:
 
 Frontend:
 - React.js - biblioteka do tworzenia interfejsów użytkownika
-- TypeScript - nadzbiór JavaScriptu
+- TypeScript - dla zapewnienia type-safety
 - Vite.js - narzędzie do budowania aplikacji webowych
 - Tailwind CSS - framework CSS (w celu szybkiego stylowania aplikacji)
 - Shad.cn - biblioteka gotowych komponentów React/TailwindCSS (w celu szybkiego tworzenia interfejsu użytkownika)
