@@ -1,5 +1,7 @@
 # RoleplayCampaignManager - PJATK-MAS Final Project
 
+**[Click here for the English version](README.en.md)**
+
 [Wszystkie Zrzuty ekranu](static/)
 
 [UML](UML/) 
