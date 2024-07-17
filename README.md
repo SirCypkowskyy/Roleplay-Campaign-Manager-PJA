@@ -1,14 +1,18 @@
 # RoleplayCampaignManager - MAS Final Project
 
-[Zrzuty ekranu](static/)
+[Wszystkie Zrzuty ekranu](static/)
 
 [UML](UML/) 
 
 Aplikacja do zarządzania kampaniami i czatami RPG w czasie rzeczywistym, stworzona w ramach projektu końcowego z przedmiotu Modelowanie i Analiza Systemów informacyjnych na PJATK.
 
+![Zrzut ekranu 4](static/4.png)
+![Zrzut ekranu 9](static/9.png)
+![Zrzut ekranu 10](static/10.png)
+
 Poniżej zawarłem kolekcje instrukcji potrzebnych do uruchomienia aplikacji, a także opis funkcjonalności.
 
-Gorąca prośba - nie kopiuj kodu bezpośrednio z tego repozytorium do swojego projektu końcowego. Wszystkie prace są sprawdzane pod kątem plagiatu, a skopiowany kod może skutkować niezaliczeniem przedmiotu. Mój kod jest dostępny publicznie, aby pokazać moje umiejętności programistyczne i pomóc innym studentom w nauce, a nie zamieściłem go tutaj, aby umożliwić innym jego kopiowanie.
+**Gorąca prośba** - nie kopiuj kodu bezpośrednio z tego repozytorium do swojego projektu końcowego. Wszystkie prace są sprawdzane pod kątem plagiatu, a skopiowany kod może skutkować niezaliczeniem przedmiotu. Mój kod jest dostępny publicznie, aby pokazać moje umiejętności programistyczne i pomóc innym studentom w nauce, nie zamieściłem go tutaj, aby umożliwić innym jego łatwe kopiowanie i powielanie w swoich projektach.
 
 ## Spis treści
 
@@ -52,7 +56,7 @@ Aby zobaczyć pełną listę funkcjonalności, odwiedź [folder UML](UML) i zoba
 
 Uruchamianie aplikacji bez całkowitej konteneryzacji:
 
-1. Zmień connection string w pliku `appsettings.json` (w folderze MasFinalProj.Api) na swó      j, lub utwórz kontener Docker z bazą danych, korzystając z pliku docker-compose.yml (użyj komendy `docker compose up -d db` w folderze, gdzie znajduje się docker-compose).
+1. Zmień connection string w pliku `appsettings.json` (w folderze MasFinalProj.Api) na swój, lub utwórz kontener Docker z bazą danych, korzystając z pliku docker-compose.yml (użyj komendy `docker compose up -d db` w folderze, gdzie znajduje się docker-compose).
 2. Uruchom migracje, wpisując w konsoli (w folderze MasFinalProj.Api) `dotnet ef database update -p ../MasFinalProj.Persistence -c DatabaseContext -s .`.
 3. Uruchom aplikację.
 
@@ -87,4 +91,4 @@ Frontend:
 - React Router - biblioteka do zarządzania nawigacją i routingiem w aplikacji
 - microsoft/signalr - biblioteka do obsługi komunikacji z serwerem za pomocą protokołu SignalR (w celu obsługi komunikatów w czasie rzeczywistym)
 - RadixUI - biblioteka gotowych komponentów React, dependency Shad.cn (w celu szybkiego tworzenia interfejsu użytkownika)
-- Cookies - biblioteka do zarządzania ciasteczkami w przeglądarce
+- Cookies - biblioteka do zarządzania ciasteczkami w aplikacji klienta
