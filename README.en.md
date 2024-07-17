@@ -9,6 +9,7 @@ An application for managing RPG campaigns and real-time chats, created as part o
 ![Screenshot 4](static/4.png)
 ![Screenshot 9](static/9.png)
 ![Screenshot 10](static/10.png)
+![Analysis Class Diagram](UML/analysis_class_diagram.png)
 
 Below, I have included a collection of instructions needed to run the application, as well as a description of its functionalities.
 
